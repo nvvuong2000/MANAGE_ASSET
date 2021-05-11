@@ -1,9 +1,9 @@
 import api from "../api/api";
 import * as userManage from "../contains/ManageUser";
 
-export const get_user_list = (user) => async (dispatch) => {
+export const get_user_list = () => async (dispatch) => {
   try {
-    const data = await api.User.getAllUsers(user);
+    const data = await api.User.getAllUsers();
     dispatch({
       type: userManage.USER_LIST,
       payload: data,

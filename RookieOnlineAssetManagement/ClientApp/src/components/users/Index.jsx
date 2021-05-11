@@ -23,8 +23,8 @@ export default function Index(props) {
   const history = useHistory();
 
   useEffect(() => {
-    dispatch(userManage.get_user_list(props.userLogin));
-  }, [props]);
+    dispatch(userManage.get_user_list());
+  }, []);
 
   const getUserList = useSelector((state) => state.user.userList);
   const [userList, setUserList] = useState([]);

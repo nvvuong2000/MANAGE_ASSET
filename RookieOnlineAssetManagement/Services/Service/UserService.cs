@@ -30,8 +30,11 @@ namespace RookieOnlineAssetManagement.Services.Service
             _userManager = userManager;
         }
 
-        public async Task<IEnumerable<UserModel>> GetUsers(string location)
+        public async Task<IEnumerable<UserModel>> GetUsers()
         {
+            var userInfo = await GetInfoUserLogin();
+            var location =userInfo.Location;
+
             return await _dbContext.Users
                 .Select(x => new UserModel { Id = x.Id, StaffCode = x.StaffCode, FirstName = x.FirstName, LastName = x.LastName,
                 UserName = x.UserName, DateOfBirth = x.DateOfBirth, Gender = x.Gender, JoinedDate = x.JoinedDate, Type = x.Type,

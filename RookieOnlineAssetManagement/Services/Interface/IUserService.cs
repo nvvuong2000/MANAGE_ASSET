@@ -13,7 +13,7 @@ namespace RookieOnlineAssetManagement.Services.Interface
 {
     public interface IUserService
     {
-        Task<IEnumerable<UserModel>> GetUsers(string location);
+        Task<IEnumerable<UserModel>> GetUsers();
         Task<UserModel> GetUsersById(int id);
         Task CreateUser(CreateUserModel createUserModel);
         Task UpdateUser(int id, CreateUserModel createUserModel);

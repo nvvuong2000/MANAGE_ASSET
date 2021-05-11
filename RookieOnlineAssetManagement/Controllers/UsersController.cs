@@ -29,15 +29,10 @@ namespace RookieOnlineAssetManagement.Controllers
             _logger = logger;
         }
 
-        [HttpPost]
-        [Route("getusers")]
-        public async Task<ActionResult<IEnumerable<UserModel>>> GetUsers([FromBody] UserModel user)
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<UserModel>>> GetUsers()
         {
-            if(user.Id==null)
-            {
-                return NotFound();
-            }
-            var result = await _userService.GetUsers(user.Location);
+            var result = await _userService.GetUsers();
             return Ok(result);
         }
         [HttpGet("{id}")]
