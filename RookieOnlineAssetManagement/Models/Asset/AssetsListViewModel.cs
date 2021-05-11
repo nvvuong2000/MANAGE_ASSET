@@ -13,7 +13,5 @@ namespace RookieOnlineAssetManagement.Models
         public string CategoryName { get; set; }
         public string StateName { get; set; }
         public StateAsset StateId { get; set; }
-
-
     }
 }

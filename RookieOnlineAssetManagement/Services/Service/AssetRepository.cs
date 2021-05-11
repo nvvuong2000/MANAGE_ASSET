@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using RookieOnlineAssetManagement.Data;
 using RookieOnlineAssetManagement.Entities;
 using RookieOnlineAssetManagement.Models;
+using RookieOnlineAssetManagement.Models.Asset;
 using RookieOnlineAssetManagement.Services.Interface;
 using RookieShop.Backend.Services.Interface;
 using System;
@@ -28,15 +29,15 @@ namespace RookieShop.Backend.Services.Implement
         {
             // Add New Asset
             var preFix = _dbContext.Categories.Where(x => x.Id == newAsset.CategoryId).Select(x => x.Prefix).FirstOrDefault();
-            
+
             var number = _dbContext.Assets.Where(x => x.AssetName.Contains(preFix)).ToList().Count() + 1;
 
             var userCurrentId = _repoUser.GetIdUserLogin();
-            
+
             string location = _dbContext.Users.Where(x => x.Id.Equals(int.Parse(userCurrentId))).Select(x => x.Location).FirstOrDefault();
-            
+
             char x = '0';
-            
+
             newAsset = new Asset()
             {
 
@@ -118,6 +119,53 @@ namespace RookieShop.Backend.Services.Implement
                 StateId = ((StateAsset)x.StateAsset),
             }).ToList();
             return AssetList;
+        }
+
+        public async Task<List<AssetsListViewModel>> SearchAsset(string findString)
+        {
+            // Get Asset List
+            var AssetList = await _dbContext.Assets
+                .Where(x => x.Id == findString || x.AssetName.Contains(findString))
+                .Select(x => new AssetsListViewModel
+                {
+                    AssetCode = x.Id,
+                    AssetName = x.AssetName,
+                    CategoryName = _dbContext.Categories.Where(s => s.Id == x.CategoryId).Select(ca => ca.CategoryName).FirstOrDefault(),
+                    StateName = ((StateAsset)x.StateAsset).AsString(EnumFormat.Description),
+                    StateId = ((StateAsset)x.StateAsset),
+                }).ToListAsync();
+            return AssetList;
+        }
+
+        public async Task<bool> DeleteAsset(string id)
+        {
+            var getAssetByAssign = await _dbContext.Assignments
+                .Where(a => a.AssetId == id)
+                .ToListAsync();
+
+            if (getAssetByAssign.Count == 0)
+            {
+                var asset = await _dbContext.Assets.FirstOrDefaultAsync(a => a.Id == id);
+                _dbContext.Assets.Remove(asset);
+                await _dbContext.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<Asset> PutAsset(AssetCreateRequest request)
+        {
+            var asset = await _dbContext.Assets.FindAsync(request.Id);
+
+            if (asset == null)
+                return null;
+            asset.AssetName = request.AssetName;
+            asset.Specification = request.Specification;
+            asset.InstalledDate = request.InstalledDate;
+            asset.StateAsset = (StateAsset)request.StateAsset;
+
+            await _dbContext.SaveChangesAsync();
+            return asset;
         }
     }
 }
