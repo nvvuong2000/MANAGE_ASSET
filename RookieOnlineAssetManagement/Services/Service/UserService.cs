@@ -8,10 +8,13 @@ using RookieOnlineAssetManagement.Data;
 using RookieOnlineAssetManagement.Entities;
 using RookieOnlineAssetManagement.Models.User;
 using RookieOnlineAssetManagement.Services.Interface;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace RookieOnlineAssetManagement.Services.Service
@@ -43,6 +46,7 @@ namespace RookieOnlineAssetManagement.Services.Service
                     FirstName = x.FirstName,
                     LastName = x.LastName,
                     UserName = x.UserName,
+                    FullName = x.FirstName + " " + x.LastName,
                     DateOfBirth = x.DateOfBirth,
                     Gender = x.Gender,
                     JoinedDate = x.JoinedDate,
@@ -62,6 +66,7 @@ namespace RookieOnlineAssetManagement.Services.Service
                     FirstName = x.FirstName,
                     LastName = x.LastName,
                     UserName = x.UserName,
+                    FullName = x.FullName,
                     DateOfBirth = x.DateOfBirth,
                     Gender = x.Gender,
                     JoinedDate = x.JoinedDate,
@@ -81,22 +86,26 @@ namespace RookieOnlineAssetManagement.Services.Service
                 string lower = name.ToLower();
                 userName += lower.Substring(0, 1);
             }
-            var find = _dbContext.Users.Where(x => x.FirstName.Equals(createUserModel.FirstName)
-            && x.LastName.Equals(createUserModel.LastName)).ToList();
+            var find = _dbContext.Users.Where(x => x.FirstName.Equals(convertToUnSign3(createUserModel.FirstName))
+            && x.LastName.Equals(convertToUnSign3(createUserModel.LastName))).ToList();
+
             var count = find.Count();
             if (count != 0)
             {
-                userNameSub = createUserModel.FirstName.ToLower() + userName + count;
+                userNameSub = convertToUnSign3(createUserModel.FirstName.ToLower()) + userName + count;
+
             }
             else
             {
-                userNameSub = createUserModel.FirstName.ToLower() + userName;
+                userNameSub = convertToUnSign3(createUserModel.FirstName.ToLower()) + userName;
+
             }
 
             var user = new User
             {
                 FirstName = createUserModel.FirstName,
                 LastName = createUserModel.LastName,
+                FullName = createUserModel.FirstName + " " + createUserModel.LastName,
                 UserName = userNameSub,
                 DateOfBirth = createUserModel.DateOfBirth,
                 JoinedDate = createUserModel.JoinedDate,
@@ -168,5 +177,12 @@ namespace RookieOnlineAssetManagement.Services.Service
 
             return info;
         }
+        public static string convertToUnSign3(string s)
+        {
+            Regex regex = new Regex("\\p{IsCombiningDiacriticalMarks}+");
+            string temp = s.Normalize(NormalizationForm.FormD);
+            return regex.Replace(temp, String.Empty).Replace('\u0111', 'd').Replace('\u0110', 'D');
+        }
+
     }
 }
