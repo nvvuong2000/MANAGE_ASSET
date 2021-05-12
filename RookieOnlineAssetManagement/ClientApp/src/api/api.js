@@ -8,7 +8,8 @@ const User={
     addUser:async(user)=>await axios.post("/api/users",user).then(res=>{return res.data}),
     updateUser:async(id,dataInput)=>await axios.put(`/api/users/${id}`,dataInput).then(res=>{return res.data}),
     disableUser:async(id)=>await axios.put(`/api/users/disable/${id}`).then(res=>{return res.data}),
-    getUserLogin:async()=>await axios.get('/api/users/infouserlogin').then(res=>{return res.data})
+    getUserLogin:async()=>await axios.get('/api/users/infouserlogin').then(res=>{return res.data}),
+    sortUser:async(sortBy)=>await axios.post("/api/users/sort",sortBy).then(res=>{return res.data})
 }
 
 export default {User}

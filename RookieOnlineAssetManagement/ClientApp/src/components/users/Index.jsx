@@ -84,6 +84,10 @@ export default function Index(props) {
     }
   };
 
+  const sort=(sortBy)=>{
+    dispatch(userManage)
+  }
+
   return (
     <div className="col-7">
       <div className="right_session">
@@ -153,11 +157,11 @@ export default function Index(props) {
         <Table responsive>
           <thead>
             <tr>
-              <th>Staff Code</th>
-              <th>Full Name</th>
+              <th onClick={()=>sort("StaffCode")}>Staff Code</th>
+              <th onClick={()=>sort("FullName")}>Full Name</th>
               <th>Username</th>
-              <th>JoinedDate</th>
-              <th>Type</th>
+              <th onClick={()=>sort("JoinedDate")}>JoinedDate</th>
+              <th onClick={()=>sort("Type")}>Type</th>
             </tr>
           </thead>
           <tbody>

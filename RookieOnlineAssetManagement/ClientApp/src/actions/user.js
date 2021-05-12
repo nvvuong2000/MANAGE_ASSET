@@ -75,3 +75,15 @@ export const get_user_login = () => async (dispatch) => {
     console.log(error);
   }
 };
+
+export const sort_user=(sortBy)=>async (dispatch)=>{
+  try{
+    const data =await api.User.sortUser(sortBy)
+    dispatch({
+      type:userManage.SORT_USER,
+      payload:data,
+    });
+  }catch(error){
+    console.log(error)
+  }
+}
