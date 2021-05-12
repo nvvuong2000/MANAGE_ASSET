@@ -21,23 +21,24 @@ export default function Index(props) {
   props.setPageName("Manage User");
   const dispatch = useDispatch();
   const history = useHistory();
-
+  const format = (value) => {
+    let subString = value.substring(0, 10)
+    let split = subString.split("-")
+    return split[1] + "/" + split[2] + "/" + split[0]
+  }
   useEffect(() => {
     dispatch(userManage.get_user_list());
   }, []);
 
   const getUserList = useSelector((state) => state.user.userList);
   const [userList, setUserList] = useState([]);
+  const [filter, setfilter] = useState([]);
 
   useEffect(() => {
     setUserList(getUserList);
   }, [getUserList, props]);
 
-  // const options = [
-  //   { value: null, label: "All" },
-  //   { value: true, label: "Admin" },
-  //   { value: false, label: "Staff" },
-  // ];
+
 
   const pushToCreateUserPage = () => {
     history.push("/user/create");
@@ -51,7 +52,7 @@ export default function Index(props) {
   const BtnSearch = () => {
     if (searchInput != "") {
       setUserList(
-        getUserList.filter(
+        filter.filter(
           (x) =>
             x.staffCode == searchInput ||
             x.lastName.toLowerCase().startsWith(searchInput.toLowerCase()) ||
@@ -59,8 +60,9 @@ export default function Index(props) {
         )
       );
     } else {
-      setUserList(getUserList);
+      setUserList(filter);
     }
+
   };
 
   const onDisableUser = (id) => {
@@ -72,14 +74,19 @@ export default function Index(props) {
       case "All":
         setOption(e.target.value);
         setUserList(getUserList);
+        setfilter(getUserList)
+
         break;
       case "Admin":
         setOption(e.target.value);
-        setUserList(getUserList.filter((x) => x.type === true));
+         setUserList(getUserList.filter((x) => x.type === true));
+        setfilter(getUserList.filter((x) => x.type === true))
+
         break;
       case "Staff":
         setOption(e.target.value);
         setUserList(getUserList.filter((x) => x.type === false));
+        setfilter(getUserList.filter((x) => x.type === false))
         break;
     }
   };
@@ -99,13 +106,8 @@ export default function Index(props) {
 
         <div className="row" id="secondRowInRight">
           <div className="col-3">
-            {/* <Select
-              options={options}
-              placeholder="Type"
-              onChange={onFilterType}
-            ></Select> */}
-            <Dropdown className="dropdownFilter">
-              <Dropdown.Toggle>
+            <Dropdown className="dropdownFilter ">
+              <Dropdown.Toggle className="customBtn">
                 <div className="row">
                   <div className="col-4">{option}</div>
                   <div className="col-2"></div>
@@ -172,7 +174,8 @@ export default function Index(props) {
                   modal
                   trigger={
                     <td className="cursor">
-                      {user.lastName + " " + user.firstName}
+                      
+                      {user.fullName}
                     </td>
                   }
                 >
@@ -187,7 +190,7 @@ export default function Index(props) {
                   modal
                   trigger={
                     <td className="cursor">
-                      {new Date(user.joinedDate).toLocaleDateString()}
+                      {format(user.joinedDate)}
                     </td>
                   }
                 >

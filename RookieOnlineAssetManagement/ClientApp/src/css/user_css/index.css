@@ -1,33 +1,36 @@
-#searchInput{
+#searchInput {
     display: flex;
     text-align: right;
     flex-direction: row;
 }
 
-#searchInput Button{
+#searchInput Button {
     background-color: white;
     color: black;
     border: 1px solid rgb(197, 197, 197);
     border-radius: 0 5px 5px 0;
 }
 
-#searchInput Input{
+#searchInput Input {
     border: 1px solid rgb(197, 197, 197);
     border-radius: 5px 0 0 5px;
     border-right: 0;
 }
-#userListLastTd{
+
+#userListLastTd {
     border: 0;
 }
-.popupDisable{
+
+.popupDisable {
     background-color: white;
     width: 450px;
 }
-.row1{
+
+.row1 {
     border: 1px solid rgb(95, 95, 95);
-    border-radius:  10px;
+    border-radius: 10px;
     background-color: rgb(241, 241, 241);
-    color:rgb(207, 35, 56);
+    color: rgb(207, 35, 56);
     font-weight: bold;
     height: 60px;
     display: flex;
@@ -35,7 +38,7 @@
     padding-left: 20px;
 }
 
-.row2{
+.row2 {
     border: 1px solid rgb(95, 95, 95);
     height: 120px;
     display: flex;
@@ -44,14 +47,15 @@
     background-color: white;
 }
 
-.row2_1{
+.row2_1 {
     margin-bottom: 20px;
 }
-.row2_2 .col-2{
+
+.row2_2 .col-2 {
     margin-right: 15px;
 }
 
-.detailUserPopUp{
+.detailUserPopUp {
     border: 1px solid rgb(95, 95, 95);
     height: 300px;
     display: flex;
@@ -60,11 +64,17 @@
     background-color: white;
 }
 
-.detailUserPopUp .row{
+.detailUserPopUp .row {
     margin-bottom: 10px;
 }
 
-#closeDetail{
+#closeDetail {
     margin-left: 150px;
     font-size: 24px;
+}
+
+.customBtn {
+    color:black !important;
+    background-color: #fff !important;
+    border-color:black !important
 }
