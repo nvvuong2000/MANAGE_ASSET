@@ -66,6 +66,8 @@ namespace RookieShop.Backend.Services.Implement
                 Specification = x.Specification,
                 CategoryId = x.CategoryId,
                 InstalledDate = x.InstalledDate,
+                Location = x.Location,
+               
 
             }).FirstOrDefaultAsync();
 
