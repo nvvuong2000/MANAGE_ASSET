@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as userManage from "../../actions/user";
 import Select from "react-select";
+import { Dropdown } from "react-bootstrap";
 import { Button, Input, Table } from "reactstrap";
 import "../../css/user_css/index.css";
 import {
   faPen,
   faTimesCircle,
   faSearch,
+  faFilter,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useHistory } from "react-router-dom";
@@ -31,11 +33,11 @@ export default function Index(props) {
     setUserList(getUserList);
   }, [getUserList, props]);
 
-  const options = [
-    { value: null, label: "All" },
-    { value: true, label: "Admin" },
-    { value: false, label: "Staff" },
-  ];
+  // const options = [
+  //   { value: null, label: "All" },
+  //   { value: true, label: "Admin" },
+  //   { value: false, label: "Staff" },
+  // ];
 
   const pushToCreateUserPage = () => {
     history.push("/user/create");
@@ -64,16 +66,19 @@ export default function Index(props) {
   const onDisableUser = (id) => {
     dispatch(userManage.disable_user(id));
   };
-
+  const [option, setOption] = useState("Type");
   const onFilterType = (e) => {
-    switch (e.value) {
-      case null:
+    switch (e.target.value) {
+      case "All":
+        setOption(e.target.value);
         setUserList(getUserList);
         break;
-      case true:
+      case "Admin":
+        setOption(e.target.value);
         setUserList(getUserList.filter((x) => x.type === true));
         break;
-      case false:
+      case "Staff":
+        setOption(e.target.value);
         setUserList(getUserList.filter((x) => x.type === false));
         break;
     }
@@ -90,11 +95,46 @@ export default function Index(props) {
 
         <div className="row" id="secondRowInRight">
           <div className="col-3">
-            <Select
+            {/* <Select
               options={options}
               placeholder="Type"
               onChange={onFilterType}
-            ></Select>
+            ></Select> */}
+            <Dropdown className="dropdownFilter">
+              <Dropdown.Toggle>
+                <div className="row">
+                  <div className="col-4">{option}</div>
+                  <div className="col-2"></div>
+                  <div className="col-1 iconDropdown"></div>
+                  <div className="col-2"><FontAwesomeIcon icon={faFilter}></FontAwesomeIcon>
+                  </div>
+                </div>
+              </Dropdown.Toggle>
+
+              <Dropdown.Menu className="dropdownMenu">
+                <Input
+                  type="checkbox"
+                  value="All"
+                  onClick={onFilterType}
+                  checked={option == "All"}
+                ></Input>
+                <label className="lblMenuDropdown">All</label><br></br>
+                <Input
+                  type="checkbox"
+                  value="Admin"
+                  onClick={onFilterType}
+                  checked={option == "Admin"}
+                ></Input>
+                <label className="lblMenuDropdown">Admin</label><br></br>
+                <Input
+                  type="checkbox"
+                  value="Staff"
+                  onClick={onFilterType}
+                  checked={option == "Staff"}
+                ></Input>
+                <label className="lblMenuDropdown">Staff</label>
+              </Dropdown.Menu>
+            </Dropdown>
           </div>
           <div className="col-2"></div>
           <div className="col-4" id="searchInput">

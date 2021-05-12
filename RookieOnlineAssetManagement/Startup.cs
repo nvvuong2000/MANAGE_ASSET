@@ -128,12 +128,11 @@ namespace RookieOnlineAssetManagement
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp";
-                spa.UseReactDevelopmentServer(npmScript: "start");
 
-                // if (env.IsDevelopment())
-                // {
-                //     spa.UseReactDevelopmentServer(npmScript: "start");
-                // }
+                if (env.IsDevelopment())
+                {
+                    spa.UseReactDevelopmentServer(npmScript: "start");
+                }
             });
         }
     }

@@ -16,7 +16,7 @@ export default function Header(props) {
     <div id="header">
       <label id="lblNav">{props.page}</label>
       <div id="dropdown-nav">
-        <Dropdown>
+        <Dropdown className="headerDropdown">
           <Dropdown.Toggle variant="danger" size="sm" id="dropdown-basic">
             {userLogin.userName}
           </Dropdown.Toggle>

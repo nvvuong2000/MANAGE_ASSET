@@ -1,26 +1,26 @@
-.right_session{
+.right_session {
   padding-top: 40px;
 }
 
-#firstRowInRight{
-  color:rgb(207, 35, 56);
+#firstRowInRight {
+  color: rgb(207, 35, 56);
   margin-bottom: 23px;
 }
 
-#secondRowInRight{
+#secondRowInRight {
   margin-bottom: 15px;
-  vertical-align:middle;
+  vertical-align: middle;
 }
 
-.validateErr{
+.validateErr {
   color: rgb(207, 35, 56);
 }
 
-.cursor{
+.cursor {
   cursor: pointer;
 }
 
-input[type="radio"]:checked::after{
+input[type="radio"]:checked::after {
   width: 17px;
   height: 17px;
   border-radius: 13px;
@@ -28,22 +28,53 @@ input[type="radio"]:checked::after{
   left: -2px;
   position: relative;
   background-color: white;
-  content: '';
+  content: "";
   display: inline-block;
   visibility: visible;
   border: 5px solid rgb(240, 21, 46);
 }
-input[type="radio"]:focus{
+input[type="radio"]:focus {
   text-shadow: 1px 1px white;
   box-shadow: 1px 1px white;
 }
 
-.react-datetime-picker__wrapper{
+.react-datetime-picker__wrapper {
   border: 1px solid rgb(197, 197, 197);
   border-radius: 5px;
 }
 
-#exampleFormControlTextarea1{
+#exampleFormControlTextarea1 {
   border-radius: 5px;
 }
 
+.dropdown-toggle::after {
+  content: none;
+}
+.dropdown-toggle {
+  color: black;
+  background-color: white;
+  border: 1px solid rgb(197, 197, 197);
+  border-radius: 5px;
+  width: 130px;
+}
+.dropdown-toggle:hover {
+  color: black;
+  background-color: white;
+}
+
+.iconDropdown {
+  border-right: 1px solid rgb(209, 209, 209);
+  margin-top: -7px;
+  margin-bottom: -7px;
+}
+.dropdownMenu {
+  display: flex;
+  padding-left: 15px;
+  flex-direction: column;
+}
+.lblMenuDropdown {
+  padding-left: 10px;
+}
+#dropdown-basic {
+  color: white;
+}
