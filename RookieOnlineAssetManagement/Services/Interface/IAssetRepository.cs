@@ -19,5 +19,8 @@ namespace RookieShop.Backend.Services.Interface
         public Task<bool> DeleteAsset(string id);
 
         public Task<Asset> PutAsset(AssetCreateRequest request);
+
+        public List<StateList> StateAssetList();
+
     }
 }

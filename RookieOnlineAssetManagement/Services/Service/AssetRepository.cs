@@ -157,5 +157,19 @@ namespace RookieShop.Backend.Services.Implement
             await _dbContext.SaveChangesAsync();
             return asset;
         }
+
+        public List<StateList> StateAssetList()
+        {
+            List<StateList> list = new List<StateList>();
+            for (int i = 0; i < Enum.GetNames(typeof(StateAsset)).Length; i++)
+            {
+                list.Add(new StateList
+                {
+                    key = i,
+                    name = ((StateAsset)i).AsString(EnumFormat.Description)
+                });
+            }
+            return list;
+        }
     }
 }

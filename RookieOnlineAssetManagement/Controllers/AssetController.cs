@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using EnumsNET;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RookieOnlineAssetManagement.Entities;
@@ -71,16 +72,7 @@ namespace RookieOnlineAssetManagement.Controllers
         }
 
 
-        // POST: AssetController/SearchAsset
-        [HttpPost("find")]
-        public async Task<ActionResult<List<AssetsListViewModel>>> SearchAsset(string findString)
-        {
-            var result = await _repo.SearchAsset(findString);
-
-            if (result == null)
-                return NoContent();
-            return Ok(result);
-        }
+       
 
         // DELETE: AssetController/DeleteAsset
         [HttpDelete]
@@ -103,6 +95,15 @@ namespace RookieOnlineAssetManagement.Controllers
             if (result == null)
                 return NotFound();
             return Ok(result);
+        }
+        [HttpGet("getState")]
+        public ActionResult<StateList> StateList()
+        {
+            var list = _repo.StateAssetList();
+
+            return Ok(list);
+
+            
         }
     }
 }
