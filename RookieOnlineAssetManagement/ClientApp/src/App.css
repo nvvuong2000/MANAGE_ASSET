@@ -20,3 +20,30 @@
   cursor: pointer;
 }
 
+input[type="radio"]:checked::after{
+  width: 17px;
+  height: 17px;
+  border-radius: 13px;
+  top: -3px;
+  left: -2px;
+  position: relative;
+  background-color: white;
+  content: '';
+  display: inline-block;
+  visibility: visible;
+  border: 5px solid rgb(240, 21, 46);
+}
+input[type="radio"]:focus{
+  text-shadow: 1px 1px white;
+  box-shadow: 1px 1px white;
+}
+
+.react-datetime-picker__wrapper{
+  border: 1px solid rgb(197, 197, 197);
+  border-radius: 5px;
+}
+
+#exampleFormControlTextarea1{
+  border-radius: 5px;
+}
+

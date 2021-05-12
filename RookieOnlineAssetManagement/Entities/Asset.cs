@@ -13,7 +13,6 @@ namespace RookieOnlineAssetManagement.Entities
         public string AssetName { get; set; }
         public string Specification { get; set; }
         public DateTime InstalledDate { get; set; }
-        public string Address { get; set; }
         public Category Category { get; set; }
         public StateAsset StateAsset { get; set; }
         public string Location { get; set; }

@@ -8,8 +8,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RookieOnlineAssetManagement.Data;
 using RookieOnlineAssetManagement.Entities;
+using RookieOnlineAssetManagement.Services.Implement;
 using RookieOnlineAssetManagement.Services.Interface;
 using RookieOnlineAssetManagement.Services.Service;
+using RookieShop.Backend.Services.Implement;
+using RookieShop.Backend.Services.Interface;
 using System.Threading.Tasks;
 
 namespace RookieOnlineAssetManagement
@@ -59,13 +62,16 @@ namespace RookieOnlineAssetManagement
                     return Task.CompletedTask;
                 };
             });
-
+            // Register the Swagger generator, defining 1 or more Swagger documents
+            services.AddSwaggerGen();
             services.AddControllersWithViews();
             services.AddRazorPages();
 
             services.AddCors();
 
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ICaTegoryRepository, CategoryRepository>();
+            services.AddTransient<IAssetRepository, AssetRepository>();
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
@@ -98,6 +104,14 @@ namespace RookieOnlineAssetManagement
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
 
             app.UseRouting();
 

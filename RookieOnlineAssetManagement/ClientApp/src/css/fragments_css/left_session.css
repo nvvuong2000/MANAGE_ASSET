@@ -1,35 +1,31 @@
-#left_session{
-    display: flex;
-    text-align: left;
+#left_session {
+  display: flex;
+  text-align: left;
 }
 
-#rookie_logo{
-    transform: scale(0.8,0.8);
+#rookie_logo {
+  transform: scale(0.8, 0.8);
 }
 
-#lbl_left_session{
-    color: rgb(207,35,56);
-    font-weight: bold;
-    transform: translate(8px,-12px);
+#lbl_left_session {
+  color: rgb(207, 35, 56);
+  font-weight: bold;
+  transform: translate(8px, -12px);
 }
 
-.menu{
-    transform: translate(8px,0);
-    margin-top: 20px;
+.menu {
+  transform: translate(8px, 0);
+  margin-top: 20px;
 }
 
-.menuBtn{
-    width: 100%;
-    background-color: rgb(239,241,245);
-    border: 0;
-    text-align: left;
-    height: 45px;
-    padding-left: 20px;
-    color: rgb(53,68,94);
-    font-weight: bold;
-    margin-bottom: 2px;
+.menuBtn {
+  width: 100%;
+  border: 0;
+  text-align: left;
+  height: 45px;
+  padding-left: 20px;
+  color: rgb(53, 68, 94);
+  font-weight: bold;
+  margin-bottom: 2px;
 }
-
-
-
 

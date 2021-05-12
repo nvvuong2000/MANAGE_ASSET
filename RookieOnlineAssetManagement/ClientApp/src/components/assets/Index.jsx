@@ -1,21 +1,11 @@
-import React, { useState } from "react";
-import Header from "../fragments/Header";
-import LeftSesstion from "../fragments/LeftSession";
+import React from "react";
 
-export default function Index() {
+export default function Index(props) {
+  props.setPageName("Manage Asset");
   return (
-    <div>
-      <Header page="Manage Asset"></Header>
-      <div className="row">
-        <div className="col-3">
-          <LeftSesstion></LeftSesstion>
-        </div>
-        <div className="col-7">
-          <div className="right_session">
-            <b>Asset List</b>
-          </div>
-        </div>
-        <div className="col-2"></div>
+    <div className="col-7">
+      <div className="right_session">
+        <b>Asset List</b>
       </div>
     </div>
   );

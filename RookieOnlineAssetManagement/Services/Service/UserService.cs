@@ -33,20 +33,42 @@ namespace RookieOnlineAssetManagement.Services.Service
         public async Task<IEnumerable<UserModel>> GetUsers()
         {
             var userInfo = await GetInfoUserLogin();
-            var location =userInfo.Location;
+            var location = userInfo.Location;
 
             return await _dbContext.Users
-                .Select(x => new UserModel { Id = x.Id, StaffCode = x.StaffCode, FirstName = x.FirstName, LastName = x.LastName,
-                UserName = x.UserName, DateOfBirth = x.DateOfBirth, Gender = x.Gender, JoinedDate = x.JoinedDate, Type = x.Type,
-                Disable = x.Disable, Location = x.Location }).Where(x => x.Disable == false &&x.Location.Equals(location))
+                .Select(x => new UserModel
+                {
+                    Id = x.Id,
+                    StaffCode = x.StaffCode,
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    UserName = x.UserName,
+                    DateOfBirth = x.DateOfBirth,
+                    Gender = x.Gender,
+                    JoinedDate = x.JoinedDate,
+                    Type = x.Type,
+                    Disable = x.Disable,
+                    Location = x.Location
+                }).Where(x => x.Disable == false && x.Location.Equals(location))
                 .ToListAsync();
         }
         public async Task<UserModel> GetUsersById(int id)
         {
             return await _dbContext.Users
-                .Select(x => new UserModel { Id = x.Id, StaffCode = x.StaffCode, FirstName = x.FirstName, LastName = x.LastName,
-                UserName = x.UserName, DateOfBirth = x.DateOfBirth, Gender = x.Gender, JoinedDate = x.JoinedDate, Type = x.Type,
-                Disable = x.Disable, Location = x.Location }).FirstOrDefaultAsync(x => x.Disable == false && x.Id == id);
+                .Select(x => new UserModel
+                {
+                    Id = x.Id,
+                    StaffCode = x.StaffCode,
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    UserName = x.UserName,
+                    DateOfBirth = x.DateOfBirth,
+                    Gender = x.Gender,
+                    JoinedDate = x.JoinedDate,
+                    Type = x.Type,
+                    Disable = x.Disable,
+                    Location = x.Location
+                }).FirstOrDefaultAsync(x => x.Disable == false && x.Id == id);
         }
 
         public async Task CreateUser(CreateUserModel createUserModel)
@@ -59,7 +81,7 @@ namespace RookieOnlineAssetManagement.Services.Service
                 string lower = name.ToLower();
                 userName += lower.Substring(0, 1);
             }
-            var find = _dbContext.Users.Where(x => x.FirstName.Equals(createUserModel.FirstName) 
+            var find = _dbContext.Users.Where(x => x.FirstName.Equals(createUserModel.FirstName)
             && x.LastName.Equals(createUserModel.LastName)).ToList();
             var count = find.Count();
             if (count != 0)
@@ -70,6 +92,7 @@ namespace RookieOnlineAssetManagement.Services.Service
             {
                 userNameSub = createUserModel.FirstName.ToLower() + userName;
             }
+
             var user = new User
             {
                 FirstName = createUserModel.FirstName,
@@ -83,11 +106,11 @@ namespace RookieOnlineAssetManagement.Services.Service
                 Disable = false,
                 Location = createUserModel.Location
             };
-            var subString=user.DateOfBirth.ToString().Substring(0,9);
-            var split=subString.Split("/");
-            split[0]=split[0].PadLeft(2,'0');
-            split[1]=split[1].PadLeft(2,'0');
-            var generatePassword=user.UserName+"@"+split[1]+split[0]+split[2];
+            var splitSpace = user.DateOfBirth.ToString().Split(" ");
+            var split = splitSpace[0].Split("/");
+            split[0] = split[0].PadLeft(2, '0');
+            split[1] = split[1].PadLeft(2, '0');
+            var generatePassword = user.UserName + "@" + split[1] + split[0] + split[2];
             var result = await _userManager.CreateAsync(user, generatePassword);
             if (result.Succeeded)
             {
@@ -95,7 +118,7 @@ namespace RookieOnlineAssetManagement.Services.Service
                 string id = user.Id.ToString().PadLeft(4, x);
                 user.StaffCode = "SD" + id;
 
-                await _dbContext.SaveChangesAsync();   
+                await _dbContext.SaveChangesAsync();
             }
 
         }

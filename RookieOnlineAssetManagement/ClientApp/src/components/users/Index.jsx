@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Header from "../fragments/Header";
-import LeftSesstion from "../fragments/LeftSession";
 import { useDispatch, useSelector } from "react-redux";
 import * as userManage from "../../actions/user";
 import Select from "react-select";
@@ -16,9 +14,9 @@ import { useHistory } from "react-router-dom";
 import Popup from "reactjs-popup";
 import DisablePopUp from "./DisablePopUp";
 import DetailPopUp from "./DetailPopUp";
-import user from "../../reducers/user";
 
 export default function Index(props) {
+  props.setPageName("Manage User");
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -31,7 +29,7 @@ export default function Index(props) {
 
   useEffect(() => {
     setUserList(getUserList);
-  }, [getUserList,props]);
+  }, [getUserList, props]);
 
   const options = [
     { value: null, label: "All" },
@@ -82,130 +80,120 @@ export default function Index(props) {
   };
 
   return (
-    <div>
-      <Header page="Manage User"></Header>
-      <div className="row">
-        <div className="col-3">
-          <LeftSesstion></LeftSesstion>
-        </div>
-        <div className="col-6">
-          <div className="right_session">
-            <div className="row" id="firstRowInRight">
-              <div className="col-12">
-                <b>User List</b>
-              </div>
-            </div>
-
-            <div className="row" id="secondRowInRight">
-              <div className="col-3">
-                <Select
-                  options={options}
-                  placeholder="Type"
-                  onChange={onFilterType}
-                ></Select>
-              </div>
-              <div className="col-6" id="searchInput">
-                <Input onChange={onChangeSearch}></Input>
-                <Button color="primary" onClick={BtnSearch}>
-                  <FontAwesomeIcon icon={faSearch} />
-                </Button>
-              </div>
-              <div className="col-3">
-                <Button color="danger" onClick={pushToCreateUserPage}>
-                  Create new user
-                </Button>
-              </div>
-            </div>
-
-            <Table responsive>
-              <thead>
-                <tr>
-                  <th>Staff Code</th>
-                  <th>Full Name</th>
-                  <th>Username</th>
-                  <th>JoinedDate</th>
-                  <th>Type</th>
-                </tr>
-              </thead>
-              <tbody>
-                {userList.map((user, index) => (
-                  <tr key={index}>
-                    <td>{user.staffCode}</td>
-                    <Popup
-                      modal
-                      trigger={
-                        <td className="cursor">
-                          {user.lastName + " " + user.firstName}
-                        </td>
-                      }
-                    >
-                      {(close) => (
-                        <DetailPopUp close={close} user={user}></DetailPopUp>
-                      )}
-                    </Popup>
-
-                    <td>{user.userName}</td>
-
-                    <Popup
-                      modal
-                      trigger={
-                        <td className="cursor">
-                          {new Date(user.joinedDate).toLocaleDateString()}
-                        </td>
-                      }
-                    >
-                      {(close) => (
-                        <DetailPopUp close={close} user={user}></DetailPopUp>
-                      )}
-                    </Popup>
-
-                    <Popup
-                      modal
-                      trigger={
-                        <td className="cursor">
-                          {user.type ? "Admin" : "Staff"}
-                        </td>
-                      }
-                    >
-                      {(close) => (
-                        <DetailPopUp close={close} user={user}></DetailPopUp>
-                      )}
-                    </Popup>
-
-                    <td id="userListLastTd">
-                      <FontAwesomeIcon
-                        icon={faPen}
-                        className="cursor"
-                        onClick={() => history.push(`/user/edit/${user.id}`)}
-                      />
-                    </td>
-                    <td id="userListLastTd">
-                      <Popup
-                        modal
-                        trigger={
-                          <FontAwesomeIcon
-                            icon={faTimesCircle}
-                            color="red"
-                            className="cursor"
-                          />
-                        }
-                      >
-                        {(close) => (
-                          <DisablePopUp
-                            close={close}
-                            userId={user.id}
-                            onDisableUser={onDisableUser}
-                          ></DisablePopUp>
-                        )}
-                      </Popup>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
+    <div className="col-7">
+      <div className="right_session">
+        <div className="row" id="firstRowInRight">
+          <div className="col-12">
+            <b>User List</b>
           </div>
         </div>
-        <div className="col-3"></div>
+
+        <div className="row" id="secondRowInRight">
+          <div className="col-3">
+            <Select
+              options={options}
+              placeholder="Type"
+              onChange={onFilterType}
+            ></Select>
+          </div>
+          <div className="col-2"></div>
+          <div className="col-4" id="searchInput">
+            <Input onChange={onChangeSearch}></Input>
+            <Button color="primary" onClick={BtnSearch}>
+              <FontAwesomeIcon icon={faSearch} />
+            </Button>
+          </div>
+          <div className="col-3">
+            <Button color="danger" onClick={pushToCreateUserPage}>
+              Create new user
+            </Button>
+          </div>
+        </div>
+
+        <Table responsive>
+          <thead>
+            <tr>
+              <th>Staff Code</th>
+              <th>Full Name</th>
+              <th>Username</th>
+              <th>JoinedDate</th>
+              <th>Type</th>
+            </tr>
+          </thead>
+          <tbody>
+            {userList.map((user, index) => (
+              <tr key={index}>
+                <td>{user.staffCode}</td>
+                <Popup
+                  modal
+                  trigger={
+                    <td className="cursor">
+                      {user.lastName + " " + user.firstName}
+                    </td>
+                  }
+                >
+                  {(close) => (
+                    <DetailPopUp close={close} user={user}></DetailPopUp>
+                  )}
+                </Popup>
+
+                <td>{user.userName}</td>
+
+                <Popup
+                  modal
+                  trigger={
+                    <td className="cursor">
+                      {new Date(user.joinedDate).toLocaleDateString()}
+                    </td>
+                  }
+                >
+                  {(close) => (
+                    <DetailPopUp close={close} user={user}></DetailPopUp>
+                  )}
+                </Popup>
+
+                <Popup
+                  modal
+                  trigger={
+                    <td className="cursor">{user.type ? "Admin" : "Staff"}</td>
+                  }
+                >
+                  {(close) => (
+                    <DetailPopUp close={close} user={user}></DetailPopUp>
+                  )}
+                </Popup>
+
+                <td id="userListLastTd">
+                  <FontAwesomeIcon
+                    icon={faPen}
+                    className="cursor"
+                    onClick={() => history.push(`/user/edit/${user.id}`)}
+                  />
+                </td>
+                <td id="userListLastTd">
+                  <Popup
+                    modal
+                    trigger={
+                      <FontAwesomeIcon
+                        icon={faTimesCircle}
+                        color="rgb(207, 35, 56)"
+                        className="cursor"
+                      />
+                    }
+                  >
+                    {(close) => (
+                      <DisablePopUp
+                        close={close}
+                        userId={user.id}
+                        onDisableUser={onDisableUser}
+                      ></DisablePopUp>
+                    )}
+                  </Popup>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
       </div>
     </div>
   );

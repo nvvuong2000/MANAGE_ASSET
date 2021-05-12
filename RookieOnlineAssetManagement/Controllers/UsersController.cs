@@ -38,10 +38,7 @@ namespace RookieOnlineAssetManagement.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<UserModel>> GetUsersById(int id)
         {
-            if(id==null)
-            {
-                return NotFound();
-            }
+
             return await _userService.GetUsersById(id);
         }
 
@@ -55,10 +52,7 @@ namespace RookieOnlineAssetManagement.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateUser(int id, CreateUserModel createUserModel)
         {
-            if(id==null)
-            {
-                return NotFound();
-            }
+
             await _userService.UpdateUser(id, createUserModel);
             return Ok();
         }
@@ -67,10 +61,7 @@ namespace RookieOnlineAssetManagement.Controllers
         [Route("disable/{id}")]
         public async Task<ActionResult> DisableUser(int id)
         {
-             if(id==null)
-            {
-                return NotFound();
-            }
+
             await _userService.DisableUser(id);
             return Ok();
         }
@@ -86,7 +77,7 @@ namespace RookieOnlineAssetManagement.Controllers
         public async Task<ActionResult> GetInfoUserLogin()
         {
 
-          return Ok(await _userService.GetInfoUserLogin());
+            return Ok(await _userService.GetInfoUserLogin());
         }
 
 

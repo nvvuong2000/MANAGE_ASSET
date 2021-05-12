@@ -7,7 +7,11 @@ export default function Header(props) {
   const getUserList = useSelector((state) => state.user.userLogin);
   let userLogin = getUserList;
 
-  const onLogout = () => {};
+  const onLogout = () => { window.location.href ="/Identity/Account/Logout?returnUrl=" + window.location.pathname};
+
+  const onChangePass=()=>{
+    window.location.href ="/Identity/Account/Manage/ChangePassword?returnUrl=" + window.location.pathname
+  }
   return (
     <div id="header">
       <label id="lblNav">{props.page}</label>
@@ -18,8 +22,8 @@ export default function Header(props) {
           </Dropdown.Toggle>
 
           <Dropdown.Menu>
-            <Dropdown.Item href="#/action-1">Change Password</Dropdown.Item>
-            <Dropdown.Item href="#/action-2" onClick={onLogout}>
+            <Dropdown.Item onClick={onChangePass}>Change Password</Dropdown.Item>
+            <Dropdown.Item  onClick={onLogout}>
               Logout
             </Dropdown.Item>
           </Dropdown.Menu>
