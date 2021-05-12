@@ -80,23 +80,6 @@ namespace RookieOnlineAssetManagement.Controllers
 
           return Ok(await _userService.GetInfoUserLogin());
         }
-        [HttpGet("getState")]
-        public async  Task<ActionResult<StateList>> StateList()
-        {        
-
-
-            List<StateList> list = new List<StateList>();
-            for (int i = 0; i < Enum.GetNames(typeof(StateAsset)).Length; i++)
-            {
-                list.Add(new StateList
-                {
-                    key = i,
-                    name = ((StateAsset)i).AsString(EnumFormat.Description)
-                });
-            }
-            return Ok(list);
-        }
-
 
 
     }

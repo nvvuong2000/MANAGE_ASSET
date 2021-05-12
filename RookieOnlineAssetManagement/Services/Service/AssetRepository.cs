@@ -28,13 +28,13 @@ namespace RookieShop.Backend.Services.Implement
         public async Task<Asset> AddAsset(Asset newAsset)
         {
             // Add New Asset
-            var preFix = _dbContext.Categories.Where(x => x.Id == newAsset.CategoryId).Select(x => x.Prefix).FirstOrDefault();
+            var preFix = await _dbContext.Categories.Where(x => x.Id == newAsset.CategoryId).Select(x => x.Prefix).FirstOrDefaultAsync();
 
-            var number = _dbContext.Assets.Where(x => x.AssetName.Contains(preFix)).ToList().Count() + 1;
+            var number = _dbContext.Assets.Where(x => x.Id.Contains(preFix)).ToList().Count() + 1;
 
             var userCurrentId = _repoUser.GetIdUserLogin();
 
-            string location = _dbContext.Users.Where(x => x.Id.Equals(int.Parse(userCurrentId))).Select(x => x.Location).FirstOrDefault();
+            string location = await _dbContext.Users.Where(x => x.Id.Equals(int.Parse(userCurrentId))).Select(x => x.Location).FirstOrDefaultAsync();
 
             char x = '0';
 
@@ -89,7 +89,7 @@ namespace RookieShop.Backend.Services.Implement
 
                 Specification = x.Specification,
 
-                Location = "HCM",
+                Location = x.Location,
 
                 InstalledDate = x.InstalledDate,
 
@@ -109,33 +109,21 @@ namespace RookieShop.Backend.Services.Implement
         public async Task<List<AssetsListViewModel>> GetAssetList()
         {
             // Get Asset List
-
-            var AssetList = _dbContext.Assets.Where(x => x.InstalledDate <= DateTime.Now).Select(x => new AssetsListViewModel
+            var userId = _repoUser.GetIdUserLogin();
+            var location = _dbContext.Users.Where(x=>x.Id.Equals(int.Parse(userId))).Select(x=>x.Location).FirstOrDefault();
+            var AssetList = await _dbContext.Assets.Where(x=>x.Location.Equals(location)).Select(x => new AssetsListViewModel
             {
                 AssetCode = x.Id,
                 AssetName = x.AssetName,
                 CategoryName = _dbContext.Categories.Where(s => s.Id == x.CategoryId).Select(ca => ca.CategoryName).FirstOrDefault(),
                 StateName = ((StateAsset)x.StateAsset).AsString(EnumFormat.Description),
                 StateId = ((StateAsset)x.StateAsset),
-            }).ToList();
+                Location = x.Location,
+            }).ToListAsync();
             return AssetList;
         }
 
-        public async Task<List<AssetsListViewModel>> SearchAsset(string findString)
-        {
-            // Get Asset List
-            var AssetList = await _dbContext.Assets
-                .Where(x => x.Id == findString || x.AssetName.Contains(findString))
-                .Select(x => new AssetsListViewModel
-                {
-                    AssetCode = x.Id,
-                    AssetName = x.AssetName,
-                    CategoryName = _dbContext.Categories.Where(s => s.Id == x.CategoryId).Select(ca => ca.CategoryName).FirstOrDefault(),
-                    StateName = ((StateAsset)x.StateAsset).AsString(EnumFormat.Description),
-                    StateId = ((StateAsset)x.StateAsset),
-                }).ToListAsync();
-            return AssetList;
-        }
+        
 
         public async Task<bool> DeleteAsset(string id)
         {

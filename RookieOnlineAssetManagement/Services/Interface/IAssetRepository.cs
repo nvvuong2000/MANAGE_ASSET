@@ -16,8 +16,6 @@ namespace RookieShop.Backend.Services.Interface
 
         public Task<List<AssetsListViewModel>> GetAssetList();
 
-        public Task<List<AssetsListViewModel>> SearchAsset(string findString);
-
         public Task<bool> DeleteAsset(string id);
 
         public Task<Asset> PutAsset(AssetCreateRequest request);

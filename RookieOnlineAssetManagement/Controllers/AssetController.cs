@@ -57,11 +57,11 @@ namespace RookieOnlineAssetManagement.Controllers
 
         // POST: AssetController/Create
         [HttpPost]
-        public ActionResult Create(Asset newAsset)
+        public async Task<ActionResult> Create(Asset newAsset)
         {
             try
             {
-                var result = _repo.AddAsset(newAsset);
+                var result = await _repo.AddAsset(newAsset);
                 return Ok(result);
             }
             catch
