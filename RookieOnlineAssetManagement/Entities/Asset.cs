@@ -25,9 +25,9 @@ namespace RookieOnlineAssetManagement.Entities
         Available = 0,
         [Description("Not Available")]
         NotAvailable = 1,
-        [Description("Waiting For ecycling")]
+        [Description("Waiting for recycling")]
         Waitingforrecycling = 2,
-        [Description("Available")]
+        [Description("Recycled")]
         Recycled = 3,
           [Description("Assigned")]
         Assigned = 4

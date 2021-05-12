@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using EnumsNET;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RookieOnlineAssetManagement.Entities;
 using RookieOnlineAssetManagement.Models;
+using RookieOnlineAssetManagement.Models.Asset;
 using RookieOnlineAssetManagement.Services.Interface;
 using RookieShop.Backend.Services.Interface;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace RookieOnlineAssetManagement.Controllers
@@ -43,7 +46,8 @@ namespace RookieOnlineAssetManagement.Controllers
 
             return Ok(result);
         }
-        [HttpPost("details")]
+
+        [HttpGet("details")]
         // GET: AssetController/Details/5
         public async Task<ActionResult<AssetDetails>> Details(string id)
         {
@@ -52,15 +56,13 @@ namespace RookieOnlineAssetManagement.Controllers
             return Ok(result);
         }
 
-      
-
         // POST: AssetController/Create
         [HttpPost]
-        public ActionResult Create(Asset newAsset)
+        public async Task<ActionResult> Create(Asset newAsset)
         {
             try
             {
-                var result = _repo.AddAsset(newAsset);
+                var result = await _repo.AddAsset(newAsset);
                 return Ok(result);
             }
             catch
@@ -69,6 +71,39 @@ namespace RookieOnlineAssetManagement.Controllers
             }
         }
 
-        
+
+       
+
+        // DELETE: AssetController/DeleteAsset
+        [HttpDelete]
+        public async Task<ActionResult> DeleteAsset(string id)
+        {
+            var result = await _repo.DeleteAsset(id);
+
+            if (result == true)
+                return Ok(); //Status code: 200
+            return NoContent();//Status code: 204
+        }
+
+
+        // PUT: AssetController/PutAsset
+        [HttpPut]
+        public async Task<ActionResult<Asset>> PutAsset(AssetCreateRequest request)
+        {
+            var result = await _repo.PutAsset(request);
+
+            if (result == null)
+                return NotFound();
+            return Ok(result);
+        }
+        [HttpGet("getState")]
+        public ActionResult<StateList> StateList()
+        {
+            var list = _repo.StateAssetList();
+
+            return Ok(list);
+
+            
+        }
     }
 }
