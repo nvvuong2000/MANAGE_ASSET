@@ -17,7 +17,8 @@ stages:
   - job: Build
     displayName: Build
     pool:
-      name: Default
+      #name: Default
+      vmImage: $(vmImageName)
     steps:
       - task: NodeTool@0
         displayName: Use Node 12.x
