@@ -34,32 +34,28 @@ input[type="radio"]:checked::after {
   border: 5px solid rgb(240, 21, 46);
 }
 input[type="radio"]:focus {
-  text-shadow: 1px 1px white;
-  box-shadow: 1px 1px white;
+  text-shadow: 1px 1px white!important;
+  box-shadow: 1px 1px white!important;
 }
 
 .react-datetime-picker__wrapper {
-  border: 1px solid rgb(197, 197, 197);
-  border-radius: 5px;
+  border: 1px solid rgb(197, 197, 197)!important;
+  border-radius: 5px!important;
 }
 
 #exampleFormControlTextarea1 {
   border-radius: 5px;
 }
 
-.dropdown-toggle::after {
+.dropdownFilter::after {
   content: none;
 }
-.dropdown-toggle {
-  color: black;
-  background-color: white;
-  border: 1px solid rgb(197, 197, 197);
-  border-radius: 5px;
-  width: 130px;
-}
-.dropdown-toggle:hover {
-  color: black;
-  background-color: white;
+.dropdownFilter {
+  color: black !important;
+  background-color: white !important;
+  border: 1px solid rgb(197, 197, 197)!important;
+  border-radius: 5px!important;
+  width: 130px!important;
 }
 
 .iconDropdown {
@@ -74,7 +70,4 @@ input[type="radio"]:focus {
 }
 .lblMenuDropdown {
   padding-left: 10px;
-}
-#dropdown-basic {
-  color: white;
 }

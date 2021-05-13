@@ -76,13 +76,25 @@ export const get_user_login = () => async (dispatch) => {
   }
 };
 
-export const sort_user=(sortBy)=>async (dispatch)=>{
+export const search_user = (search) => async (dispatch) => {
+  try {
+    const data = await api.User.searchUser(search);
+    dispatch({
+      type: userManage.SEARCH_USER,
+      payload: data,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const sort_user=(sort)=>async (dispatch)=>{
   try{
-    const data =await api.User.sortUser(sortBy)
+    const data=await api.User.sortUser(sort)
     dispatch({
       type:userManage.SORT_USER,
-      payload:data,
-    });
+      payload:data
+    })
   }catch(error){
     console.log(error)
   }

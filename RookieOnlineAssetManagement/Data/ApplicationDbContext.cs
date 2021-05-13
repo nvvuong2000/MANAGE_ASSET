@@ -43,13 +43,13 @@ namespace RookieOnlineAssetManagement.Data
             modelBuilder.Entity<User>().HasData(
                 new User { Id = 1, StaffCode = "SD0001", Gender = true, Type = true, DateOfBirth = new DateTime(1999, 2, 13), 
                 JoinedDate = new DateTime(2021, 3, 15), UserName = "dattt", PasswordHash = hasher.HashPassword(null, "dattt@123"),
-                FirstName = "Dat", LastName = "Tran Thanh",Location="HCM",NormalizedUserName="DATTT",Email="dattt",
-                NormalizedEmail="DATT",SecurityStamp = string.Empty, EmailConfirmed = true,});
+                FirstName = "Đạt", LastName = "Trần Thành",Location="HCM",NormalizedUserName="DATTT",Email="dattt",
+                NormalizedEmail="DATT",SecurityStamp = string.Empty, EmailConfirmed = true,FullName="Đạt Trần Thành"});
             modelBuilder.Entity<User>().HasData(
                 new User { Id = 2, StaffCode = "SD0002", Gender = true, Type = true, DateOfBirth = new DateTime(1999, 2, 13), 
                 JoinedDate = new DateTime(2021, 3, 15), UserName = "vuongnv", PasswordHash = hasher.HashPassword(null, "vuongnv@123"), 
-                FirstName = "Vuong", LastName = "Nguyen Van",Location="HN",NormalizedUserName="VUONGNV",Email="vuongnv",
-                NormalizedEmail="VUONGNV",SecurityStamp = string.Empty, EmailConfirmed = true,});
+                FirstName = "Vương", LastName = "Nguyễn Văn",Location="HN",NormalizedUserName="VUONGNV",Email="vuongnv",
+                NormalizedEmail="VUONGNV",SecurityStamp = string.Empty, EmailConfirmed = true,FullName="Vương Nguyễn Văn"});
         }
     }
 }

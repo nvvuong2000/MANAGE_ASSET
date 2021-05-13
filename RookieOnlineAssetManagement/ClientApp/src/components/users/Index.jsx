@@ -9,7 +9,7 @@ import {
   faPen,
   faTimesCircle,
   faSearch,
-  faFilter,
+  faFilter,faCaretDown,faCaretUp
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useHistory } from "react-router-dom";
@@ -21,79 +21,52 @@ export default function Index(props) {
   props.setPageName("Manage User");
   const dispatch = useDispatch();
   const history = useHistory();
-  const format = (value) => {
-    let subString = value.substring(0, 10)
-    let split = subString.split("-")
-    return split[1] + "/" + split[2] + "/" + split[0]
-  }
+
   useEffect(() => {
     dispatch(userManage.get_user_list());
   }, []);
 
   const getUserList = useSelector((state) => state.user.userList);
   const [userList, setUserList] = useState([]);
-  const [filter, setfilter] = useState([]);
-
-  useEffect(() => {
-    setUserList(getUserList);
-  }, [getUserList, props]);
-
-
 
   const pushToCreateUserPage = () => {
     history.push("/user/create");
   };
 
-  const [searchInput, setSearchInput] = useState("");
-  const onChangeSearch = (e) => {
-    setSearchInput(e.target.value);
-  };
-
-  const BtnSearch = () => {
-    if (searchInput != "") {
-      setUserList(
-        filter.filter(
-          (x) =>
-            x.staffCode == searchInput ||
-            x.lastName.toLowerCase().startsWith(searchInput.toLowerCase()) ||
-            x.firstName.toLowerCase().startsWith(searchInput.toLowerCase())
-        )
-      );
-    } else {
-      setUserList(filter);
-    }
-
-  };
+  const [searchInput, setSearchInput] = useState({
+    InputSearch: "",
+    TypeSearch: "Type",
+  });
+  // const onChangeSearch = (e) => {
+  //   setSearchInput({ ...searchInput, InputSearch: e.target.value });
+  // };
 
   const onDisableUser = (id) => {
     dispatch(userManage.disable_user(id));
   };
-  const [option, setOption] = useState("Type");
+
   const onFilterType = (e) => {
-    switch (e.target.value) {
-      case "All":
-        setOption(e.target.value);
-        setUserList(getUserList);
-        setfilter(getUserList)
-
-        break;
-      case "Admin":
-        setOption(e.target.value);
-         setUserList(getUserList.filter((x) => x.type === true));
-        setfilter(getUserList.filter((x) => x.type === true))
-
-        break;
-      case "Staff":
-        setOption(e.target.value);
-        setUserList(getUserList.filter((x) => x.type === false));
-        setfilter(getUserList.filter((x) => x.type === false))
-        break;
-    }
+    const {name,value}=e.target
+    setSearchInput({ ...searchInput, [name]: value });
   };
 
-  const sort=(sortBy)=>{
-    dispatch(userManage)
-  }
+  useEffect(()=>{
+    dispatch(userManage.search_user(searchInput));
+  },[searchInput])
+  
+  const [sortList,setSortList]=useState({Column:"",sortASC:false})
+  const sort = (sortBy) => {
+    setSortList({Column:sortBy,sortASC:!sortList.sortASC})
+  };
+  console.log(sortList)
+  useEffect(()=>{
+    dispatch(userManage.sort_user(sortList));
+  },[sortList])
+
+  useEffect(() => {
+    setUserList(getUserList);
+  }, [getUserList]);
+  
 
   return (
     <div className="col-7">
@@ -106,13 +79,14 @@ export default function Index(props) {
 
         <div className="row" id="secondRowInRight">
           <div className="col-3">
-            <Dropdown className="dropdownFilter ">
-              <Dropdown.Toggle className="customBtn">
+            <Dropdown >
+              <Dropdown.Toggle className="dropdownFilter">
                 <div className="row">
-                  <div className="col-4">{option}</div>
+                  <div className="col-4">{searchInput.TypeSearch}</div>
                   <div className="col-2"></div>
                   <div className="col-1 iconDropdown"></div>
-                  <div className="col-2"><FontAwesomeIcon icon={faFilter}></FontAwesomeIcon>
+                  <div className="col-2">
+                    <FontAwesomeIcon icon={faFilter}></FontAwesomeIcon>
                   </div>
                 </div>
               </Dropdown.Toggle>
@@ -121,22 +95,24 @@ export default function Index(props) {
                 <Input
                   type="checkbox"
                   value="All"
-                  onClick={onFilterType}
-                  checked={option == "All"}
+                  onClick={onFilterType} name="TypeSearch"
+                  checked={searchInput.TypeSearch == "All"}
                 ></Input>
-                <label className="lblMenuDropdown">All</label><br></br>
+                <label className="lblMenuDropdown">All</label>
+                <br></br>
                 <Input
                   type="checkbox"
                   value="Admin"
-                  onClick={onFilterType}
-                  checked={option == "Admin"}
+                  onClick={onFilterType} name="TypeSearch"
+                  checked={searchInput.TypeSearch == "Admin"}
                 ></Input>
-                <label className="lblMenuDropdown">Admin</label><br></br>
+                <label className="lblMenuDropdown">Admin</label>
+                <br></br>
                 <Input
                   type="checkbox"
                   value="Staff"
-                  onClick={onFilterType}
-                  checked={option == "Staff"}
+                  onClick={onFilterType} name="TypeSearch"
+                  checked={searchInput.TypeSearch == "Staff"}
                 ></Input>
                 <label className="lblMenuDropdown">Staff</label>
               </Dropdown.Menu>
@@ -144,8 +120,8 @@ export default function Index(props) {
           </div>
           <div className="col-2"></div>
           <div className="col-4" id="searchInput">
-            <Input onChange={onChangeSearch}></Input>
-            <Button color="primary" onClick={BtnSearch}>
+            <Input onChange={onFilterType} name="InputSearch"></Input>
+            <Button color="primary" id="searchBtn">
               <FontAwesomeIcon icon={faSearch} />
             </Button>
           </div>
@@ -159,11 +135,27 @@ export default function Index(props) {
         <Table responsive>
           <thead>
             <tr>
-              <th onClick={()=>sort("StaffCode")}>Staff Code</th>
-              <th onClick={()=>sort("FullName")}>Full Name</th>
+              <th onClick={()=>sort("StaffCode")} className="columnSort">Staff Code 
+              {sortList.Column=="StaffCode"&&sortList.sortASC==true?<FontAwesomeIcon icon={faCaretDown}></FontAwesomeIcon>:
+              sortList.Column=="StaffCode"&&sortList.sortASC==false?<FontAwesomeIcon icon={faCaretUp}></FontAwesomeIcon>:
+              <FontAwesomeIcon icon={faCaretDown}></FontAwesomeIcon>}</th>
+
+              <th onClick={()=>sort("LastName")} className="columnSort">Full Name
+              {sortList.Column=="LastName"&&sortList.sortASC==true?<FontAwesomeIcon icon={faCaretDown}></FontAwesomeIcon>:
+              sortList.Column=="LastName"&&sortList.sortASC==false?<FontAwesomeIcon icon={faCaretUp}></FontAwesomeIcon>:
+              <FontAwesomeIcon icon={faCaretDown}></FontAwesomeIcon>}</th>
+
               <th>Username</th>
-              <th onClick={()=>sort("JoinedDate")}>JoinedDate</th>
-              <th onClick={()=>sort("Type")}>Type</th>
+
+              <th onClick={()=>sort("JoinedDate")} className="columnSort">JoinedDate
+              {sortList.Column=="JoinedDate"&&sortList.sortASC==true?<FontAwesomeIcon icon={faCaretDown}></FontAwesomeIcon>:
+              sortList.Column=="JoinedDate"&&sortList.sortASC==false?<FontAwesomeIcon icon={faCaretUp}></FontAwesomeIcon>:
+              <FontAwesomeIcon icon={faCaretDown}></FontAwesomeIcon>}</th>
+
+              <th onClick={()=>sort("Type")} className="columnSort">Type
+              {sortList.Column=="Type"&&sortList.sortASC==true?<FontAwesomeIcon icon={faCaretDown}></FontAwesomeIcon>:
+              sortList.Column=="Type"&&sortList.sortASC==false?<FontAwesomeIcon icon={faCaretUp}></FontAwesomeIcon>:
+              <FontAwesomeIcon icon={faCaretDown}></FontAwesomeIcon>}</th>
             </tr>
           </thead>
           <tbody>
@@ -174,8 +166,7 @@ export default function Index(props) {
                   modal
                   trigger={
                     <td className="cursor">
-                      
-                      {user.fullName}
+                      {user.lastName + " " + user.firstName}
                     </td>
                   }
                 >
@@ -190,7 +181,7 @@ export default function Index(props) {
                   modal
                   trigger={
                     <td className="cursor">
-                      {format(user.joinedDate)}
+                      {new Date(user.joinedDate).toLocaleDateString()}
                     </td>
                   }
                 >

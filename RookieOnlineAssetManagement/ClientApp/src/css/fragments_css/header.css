@@ -10,8 +10,8 @@
 }
 
 #dropdown-basic{
-  background-color: rgb(207, 35, 56);
-  border: 0px;
+  background-color: rgb(207, 35, 56)!important;
+  border: 0px!important;
   margin-top: -5px;
   font-size: 16px;
   font-weight: bold;

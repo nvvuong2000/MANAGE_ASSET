@@ -23,7 +23,7 @@ namespace RookieOnlineAssetManagement.Controllers
             _repo = repo;
         }
         [HttpPost]
-        public async Task<ActionResult<MessageModel>> AddCategory(CategoryRequestModel model)
+        public async Task<ActionResult> AddCategory(CategoryRequestModel model)
         {
             var messgae = new MessageModel();
             var result =  _repo.AddCategory(model);
@@ -44,7 +44,7 @@ namespace RookieOnlineAssetManagement.Controllers
             return Ok(messgae);
         }
         [HttpGet("/categorylist")]
-        public async Task<ActionResult<MessageModel>> GetCategoryList()
+        public async Task<ActionResult> GetCategoryList()
         {
             var result = await _repo.GetCategoryList();
 

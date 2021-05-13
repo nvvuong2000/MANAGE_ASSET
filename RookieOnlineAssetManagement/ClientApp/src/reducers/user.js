@@ -33,9 +33,13 @@ export default (state = initialState, { type, payload }) => {
       state.userLogin = payload;
       return { ...state };
     }
+    case userManage.SEARCH_USER:{
+      state.userList=payload;
+      return {...state};
+    }
     case userManage.SORT_USER:{
       state.userList=payload;
-      return{...state}
+      return {...state}
     }
     default:
       return state;

@@ -62,12 +62,12 @@ namespace RookieShop.Backend.Services.Implement
                 AssetCode = x.Id,
                 AssetName = x.AssetName,
                 CategoryName = _dbContext.Categories.Where(s => s.Id == x.CategoryId).Select(ca => ca.CategoryName).FirstOrDefault(),
-                StateAsset = ((StateAsset)x.StateAsset),
+                StateName = ((StateAsset)x.StateAsset).AsString(EnumFormat.Description),
                 Specification = x.Specification,
                 CategoryId = x.CategoryId,
                 InstalledDate = x.InstalledDate,
                 Location = x.Location,
-               
+
 
             }).FirstOrDefaultAsync();
 
@@ -94,17 +94,20 @@ namespace RookieShop.Backend.Services.Implement
                 Location = x.Location,
 
                 InstalledDate = x.InstalledDate,
-
-                Date = _dbContext.Returnings.Include(x => x.Assignment).Include(x => x.Assignment.Asset).Where(x => x.Assignment.AssetId.Equals(id)).Select(x => x.Assignment.AssignedDate).ToList(),
-
-                ReturnedDate = _dbContext.Returnings.Include(x => x.Assignment).Include(x => x.Assignment.Asset).Where(x => x.Assignment.AssetId.Equals(id)).Select(x => x.ReturnedDate).ToList(),
-
-                AssignedTo = _dbContext.Returnings.Include(x => x.Assignment).Include(x => x.Assignment.Borrower).Where(x => x.Assignment.AssetId.Equals(id)).Select(x => x.Assignment.Borrower.UserName).ToList(),
-
-                AssignedBy = _dbContext.Returnings.Include(x => x.Assignment).Include(x => x.Assignment.Lender).Where(x => x.Assignment.AssetId.Equals(id)).Select(x => x.Assignment.Lender.UserName).ToList(),
-
-
             }).FirstOrDefaultAsync();
+
+
+            var List = await _dbContext.Returnings.Include(x => x.Assignment)
+                .Include(x => x.Assignment.Asset)
+                .Where(x => x.Assignment.AssetId.Equals(id)).Select(x => new AssetHistory
+                {
+                    AssignedTo = x.Assignment.Borrower.UserName,
+                    AssignedBy = x.Assignment.Lender.UserName,
+                    ReturnedDate = x.ReturnedDate,
+                    DateAssigned = x.Assignment.AssignedDate,
+
+                }).ToListAsync();
+            AssetDetails.assetHistories = List;
             return AssetDetails;
         }
 
@@ -112,8 +115,11 @@ namespace RookieShop.Backend.Services.Implement
         {
             // Get Asset List
             var userId = _repoUser.GetIdUserLogin();
-            var location = _dbContext.Users.Where(x=>x.Id.Equals(int.Parse(userId))).Select(x=>x.Location).FirstOrDefault();
-            var AssetList = await _dbContext.Assets.Where(x=>x.Location.Equals(location)).Select(x => new AssetsListViewModel
+            var location = _dbContext.Users.Where(x => x.Id.Equals(int.Parse(userId))).Select(x => x.Location).FirstOrDefault();
+            var AssetList = await _dbContext.Assets.Where(x => x.Location.Equals(location))
+                .Where(x => ((int)x.StateAsset).Equals(0)
+                || ((int)x.StateAsset).Equals(1) || ((int)x.StateAsset).Equals(4))
+            .Select(x => new AssetsListViewModel
             {
                 AssetCode = x.Id,
                 AssetName = x.AssetName,
@@ -125,7 +131,7 @@ namespace RookieShop.Backend.Services.Implement
             return AssetList;
         }
 
-        
+
 
         public async Task<bool> DeleteAsset(string id)
         {
@@ -158,6 +164,7 @@ namespace RookieShop.Backend.Services.Implement
             return asset;
         }
 
+
         public List<StateList> StateAssetList()
         {
             List<StateList> list = new List<StateList>();
@@ -170,6 +177,42 @@ namespace RookieShop.Backend.Services.Implement
                 });
             }
             return list;
+        }
+
+        public async Task<List<AssetsListViewModel>> MutilSearchAsset(MultipleFilter mul)
+        {
+
+            var userId = _repoUser.GetIdUserLogin();
+            var location = _dbContext.Users.Where(x => x.Id.Equals(int.Parse(userId))).Select(x => x.Location).FirstOrDefault();
+            var AssetList = await _dbContext.Assets.Include(x => x.Category).ToListAsync();
+
+            if (mul.states[0].Equals(-1))
+            {
+                AssetList = AssetList.Where(x => x.Location.Equals(location)
+                && mul.categories.Contains(x.CategoryId)).ToList();
+            }
+
+            else if (mul.categories[0].Equals(-1))
+            {
+                AssetList = AssetList.Where(x => x.Location.Equals(location)
+                && mul.states.Contains((int)x.StateAsset)).ToList();
+            }
+            else
+            {
+                AssetList = AssetList.Where(x => x.Location.Equals(location)
+                && mul.states.Contains((int)x.StateAsset) && mul.categories.Contains(x.CategoryId)).ToList();
+            }
+            var result = AssetList.Select(x => new AssetsListViewModel
+            {
+                AssetCode = x.Id,
+                AssetName = x.AssetName,
+                CategoryName = x.Category.CategoryName,
+                StateName = ((StateAsset)x.StateAsset).AsString(EnumFormat.Description),
+                StateId = ((StateAsset)x.StateAsset),
+                Location = x.Location,
+            }).ToList();
+
+            return result;
         }
     }
 }

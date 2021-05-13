@@ -80,6 +80,20 @@ namespace RookieOnlineAssetManagement.Controllers
             return Ok(await _userService.GetInfoUserLogin());
         }
 
+        [HttpPost]
+        [Route("search")]
+        public async Task<ActionResult<IEnumerable<UserModel>>> SearchUser(SearchUserModel userSearch)
+        {
+            return Ok(await _userService.SearchFilterUser(userSearch));
+        }
+
+        [HttpPost]
+        [Route("sort")]
+        public async Task<ActionResult<IEnumerable<UserModel>>> SortUser(SortUserModel userSort)
+        {
+            return Ok(await _userService.SortUser(userSort));
+        }
+
 
     }
 }

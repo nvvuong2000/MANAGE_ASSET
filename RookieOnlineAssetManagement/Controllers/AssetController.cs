@@ -22,8 +22,8 @@ namespace RookieOnlineAssetManagement.Controllers
 
 
         private readonly IAssetRepository _repo;
- 
-        public AssetController(IAssetRepository repo, IUserService repoUser)
+
+        public AssetController(IAssetRepository repo)
         {
             _repo = repo;
 
@@ -31,7 +31,7 @@ namespace RookieOnlineAssetManagement.Controllers
 
         // GET: AssetController/GetAssetList
         [HttpGet]
-        public async Task<ActionResult<AssetDetailsNotIncludeHistory>> GetAssetList()
+        public async Task<ActionResult> GetAssetList()
         {
             var result = await _repo.GetAssetList();
 
@@ -40,7 +40,7 @@ namespace RookieOnlineAssetManagement.Controllers
 
         // GET: AssetController/Details/5
         [HttpGet("history")]
-        public async Task<ActionResult<AssetDetailsNotIncludeHistory>> DetailsWithHistory(string id)
+        public async Task<ActionResult> DetailsWithHistory(string id)
         {
             var result = await _repo.AssetDetailsHistory(id);
 
@@ -49,10 +49,10 @@ namespace RookieOnlineAssetManagement.Controllers
 
         [HttpGet("details")]
         // GET: AssetController/Details/5
-        public async Task<ActionResult<AssetDetails>> Details(string id)
+        public async Task<ActionResult> Details(string id)
         {
             var result = await _repo.AssetDetails(id);
-            
+
             return Ok(result);
         }
 
@@ -72,7 +72,7 @@ namespace RookieOnlineAssetManagement.Controllers
         }
 
 
-       
+
 
         // DELETE: AssetController/DeleteAsset
         [HttpDelete]
@@ -88,13 +88,26 @@ namespace RookieOnlineAssetManagement.Controllers
 
         // PUT: AssetController/PutAsset
         [HttpPut]
-        public async Task<ActionResult<Asset>> PutAsset(AssetCreateRequest request)
+        public async Task<ActionResult> PutAsset(AssetCreateRequest request)
         {
             var result = await _repo.PutAsset(request);
 
             if (result == null)
                 return NotFound();
             return Ok(result);
+        }
+        [HttpPost("mutil-search")]
+        public async Task<ActionResult> MutilSearchAsset(MultipleFilter mul)
+        {
+            //State and category checked All
+            if (mul.states[0].Equals(-1) && mul.categories[0].Equals(-1))
+            {
+                var result = await _repo.GetAssetList();
+
+                return Ok(result);
+            }
+            var resultSearch = await _repo.MutilSearchAsset(mul);
+            return Ok(resultSearch);
         }
         [HttpGet("getState")]
         public ActionResult<StateList> StateList()
@@ -103,7 +116,7 @@ namespace RookieOnlineAssetManagement.Controllers
 
             return Ok(list);
 
-            
+
         }
     }
 }

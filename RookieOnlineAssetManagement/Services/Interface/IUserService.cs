@@ -20,5 +20,7 @@ namespace RookieOnlineAssetManagement.Services.Interface
         Task DisableUser(int id);
         string GetIdUserLogin();
         Task<UserModel> GetInfoUserLogin();
+        Task<IEnumerable<UserModel>> SearchFilterUser(SearchUserModel userSearch);
+        Task<IEnumerable<UserModel>> SortUser(SortUserModel sortUser);
     }
 }

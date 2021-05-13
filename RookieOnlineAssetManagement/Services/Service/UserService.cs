@@ -46,7 +46,6 @@ namespace RookieOnlineAssetManagement.Services.Service
                     FirstName = x.FirstName,
                     LastName = x.LastName,
                     UserName = x.UserName,
-                    FullName = x.FirstName + " " + x.LastName,
                     DateOfBirth = x.DateOfBirth,
                     Gender = x.Gender,
                     JoinedDate = x.JoinedDate,
@@ -66,7 +65,6 @@ namespace RookieOnlineAssetManagement.Services.Service
                     FirstName = x.FirstName,
                     LastName = x.LastName,
                     UserName = x.UserName,
-                    FullName = x.FullName,
                     DateOfBirth = x.DateOfBirth,
                     Gender = x.Gender,
                     JoinedDate = x.JoinedDate,
@@ -86,26 +84,25 @@ namespace RookieOnlineAssetManagement.Services.Service
                 string lower = name.ToLower();
                 userName += lower.Substring(0, 1);
             }
-            var find = _dbContext.Users.Where(x => x.FirstName.Equals(convertToUnSign3(createUserModel.FirstName))
-            && x.LastName.Equals(convertToUnSign3(createUserModel.LastName))).ToList();
+            var modelFullName=createUserModel.FirstName+" "+createUserModel.LastName;
+            var fullName=_dbContext.Users.Select(x=>convertToUnSign3(x.FullName)).ToList();
+            var search=fullName.Where(x=>x.Equals(convertToUnSign3(modelFullName)));
 
-            var count = find.Count();
+            var count =  search.Count();
             if (count != 0)
             {
                 userNameSub = convertToUnSign3(createUserModel.FirstName.ToLower()) + userName + count;
-
             }
             else
             {
                 userNameSub = convertToUnSign3(createUserModel.FirstName.ToLower()) + userName;
-
             }
 
             var user = new User
             {
                 FirstName = createUserModel.FirstName,
                 LastName = createUserModel.LastName,
-                FullName = createUserModel.FirstName + " " + createUserModel.LastName,
+                FullName=modelFullName,
                 UserName = userNameSub,
                 DateOfBirth = createUserModel.DateOfBirth,
                 JoinedDate = createUserModel.JoinedDate,
@@ -126,7 +123,6 @@ namespace RookieOnlineAssetManagement.Services.Service
                 char x = '0';
                 string id = user.Id.ToString().PadLeft(4, x);
                 user.StaffCode = "SD" + id;
-
                 await _dbContext.SaveChangesAsync();
             }
 
@@ -140,6 +136,7 @@ namespace RookieOnlineAssetManagement.Services.Service
             selectUser.JoinedDate = createUserModel.JoinedDate;
             selectUser.Type = createUserModel.Type;
             await _dbContext.SaveChangesAsync();
+            
         }
 
         public async Task DisableUser(int id)
@@ -177,12 +174,91 @@ namespace RookieOnlineAssetManagement.Services.Service
 
             return info;
         }
+        public async Task<IEnumerable<UserModel>> SearchFilterUser(SearchUserModel userSearch)
+        {
+            var getUser = await GetUsers();
+            if (userSearch.InputSearch == "" && userSearch.TypeSearch == "Type" || userSearch.InputSearch == "" && userSearch.TypeSearch == "All")
+            {
+                return getUser;
+            }
+            else if (userSearch.InputSearch == "" && userSearch.TypeSearch == "Admin")
+            {
+                return getUser.Where(x => x.Type == true);
+            }
+            else if (userSearch.InputSearch == "" && userSearch.TypeSearch == "Staff")
+            {
+                return getUser.Where(x => x.Type == false);
+            }
+            else if (userSearch.InputSearch != "" && userSearch.TypeSearch == "Type" || userSearch.InputSearch != "" && userSearch.TypeSearch == "All")
+            {
+                return getUser.Where(x => x.LastName.Contains(userSearch.InputSearch, StringComparison.InvariantCultureIgnoreCase)
+                || x.FirstName.Contains(userSearch.InputSearch, StringComparison.InvariantCultureIgnoreCase)
+                || x.StaffCode.StartsWith(userSearch.InputSearch, StringComparison.InvariantCultureIgnoreCase));
+            }
+            else if (userSearch.InputSearch != "" && userSearch.TypeSearch == "Admin")
+            {
+                return getUser.Where(x => x.FirstName.Contains(userSearch.InputSearch, StringComparison.InvariantCultureIgnoreCase) && x.Type == true
+                || x.LastName.Contains(userSearch.InputSearch, StringComparison.InvariantCultureIgnoreCase) && x.Type == true
+                || x.StaffCode.StartsWith(userSearch.InputSearch, StringComparison.InvariantCultureIgnoreCase) && x.Type == true);
+            }
+            else
+            {
+                return getUser.Where(x => x.FirstName.Contains(userSearch.InputSearch, StringComparison.InvariantCultureIgnoreCase) && x.Type == false
+                || x.LastName.Contains(userSearch.InputSearch, StringComparison.InvariantCultureIgnoreCase) && x.Type == false
+                || x.StaffCode.StartsWith(userSearch.InputSearch, StringComparison.InvariantCultureIgnoreCase) && x.Type == true);
+            }
+        }
+        public async Task<IEnumerable<UserModel>> SortUser(SortUserModel sortUser)
+        {
+            var getUser = await GetUsers();
+            if (sortUser.sortASC == true)
+            {
+                if (sortUser.Column == "StaffCode")
+                {
+                    return getUser.OrderBy(x => x.StaffCode);
+                }
+                else if (sortUser.Column == "LastName")
+                {
+                    return getUser.OrderBy(x => x.LastName);
+                }
+                else if (sortUser.Column == "JoinedDate")
+                {
+                    return getUser.OrderBy(x => x.JoinedDate);
+                }
+                else if (sortUser.Column == "Type")
+                {
+                    return getUser.OrderBy(x => x.Type);
+                }
+                return getUser;
+            }
+            else
+            {
+                if (sortUser.Column == "StaffCode")
+                {
+                    return getUser.OrderByDescending(x => x.StaffCode);
+                }
+                else if (sortUser.Column == "LastName")
+                {
+                    return getUser.OrderByDescending(x => x.LastName);
+                }
+                else if (sortUser.Column == "JoinedDate")
+                {
+                    return getUser.OrderByDescending(x => x.JoinedDate);
+                }
+                else if (sortUser.Column == "Type")
+                {
+                    return getUser.OrderByDescending(x => x.Type);
+                }
+                return getUser;
+            }
+
+        }
         public static string convertToUnSign3(string s)
         {
             Regex regex = new Regex("\\p{IsCombiningDiacriticalMarks}+");
             string temp = s.Normalize(NormalizationForm.FormD);
             return regex.Replace(temp, String.Empty).Replace('\u0111', 'd').Replace('\u0110', 'D');
         }
-
     }
+
 }
