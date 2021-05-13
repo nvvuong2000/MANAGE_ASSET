@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "reactstrap";
 
-export default function DisablePopUp(props) {
+export default function DeletePopUp(props) {
   return (
     <div className="popupDisable">
       <div className="row row1">
@@ -12,16 +12,15 @@ export default function DisablePopUp(props) {
       <div className="row row2">
         <div className="row row2_1">
           <div className="col-12">
-            <label>Do you want to disable this user?</label>
+            <label>Do you want to delete this assignment?</label>
           </div>
         </div>
         <div className="row row2_2">
           <div className="col-2">
             <Button
               color="danger"
-              onClick={() => props.onDisableUser(props.userId)}
             >
-              Disable
+              Delete
             </Button>
           </div>
           <div className="col-2">

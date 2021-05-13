@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Header from "../fragments/Header";
-import LeftSesstion from "../fragments/LeftSession";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import * as userManage from "../../actions/user";
@@ -10,6 +8,7 @@ import Select from "react-select";
 import DateTimePicker from "react-datetime-picker";
 
 export default function CreateUser(props) {
+  props.setPageName("Manage User > Create New User");
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -28,7 +27,7 @@ export default function CreateUser(props) {
   });
 
   try {
-    if (createUser.Location == ""&&location!=undefined) {
+    if (createUser.Location == "" && location != undefined) {
       setCreateUser({ ...createUser, Location: location });
     }
   } catch (err) {
@@ -86,149 +85,145 @@ export default function CreateUser(props) {
   useEffect(() => {
     setCreateUser({
       ...createUser,
-      DateOfBirth: dateOfBirth != null ? dateOfBirth : null,
+      DateOfBirth:
+        dateOfBirth != null
+          ? new Date(
+              dateOfBirth.getFullYear(),
+              dateOfBirth.getMonth(),
+              dateOfBirth.getDate() + 1
+            )
+          : null,
     });
   }, [dateOfBirth]);
 
   useEffect(() => {
     setCreateUser({
       ...createUser,
-      JoinedDate: joinedDate != null ? joinedDate : null,
+      JoinedDate:
+        joinedDate != null
+          ? new Date(
+              joinedDate.getFullYear(),
+              joinedDate.getMonth(),
+              joinedDate.getDate() + 1
+            )
+          : null,
     });
   }, [joinedDate]);
 
   return (
-    <div>
-      <Header page="Manage User > Create New User"></Header>
-      <div className="row">
-        <div className="col-3">
-          <LeftSesstion></LeftSesstion>
+    <div className="col-3">
+      <div className="right_session">
+        <div className="row" id="firstRowInRight">
+          <b>Create New User</b>
         </div>
-        <div className="col-3">
-          <div className="right_session">
-            <div className="row" id="firstRowInRight">
-              <b>Create New User</b>
-            </div>
 
-            <div id="secondRowInRight">
-              <div className="row createUserRow">
-                <div className="col-4">
-                  <label>First Name</label>
+        <div id="secondRowInRight">
+          <div className="row createUserRow">
+            <div className="col-4">
+              <label>First Name</label>
+            </div>
+            <div className="col-8">
+              <Input type="text" onChange={onChange} name="FirstName"></Input>
+            </div>
+          </div>
+
+          <div className="row createUserRow">
+            <div className="col-4">
+              <label>Last Name</label>
+            </div>
+            <div className="col-8">
+              <Input type="text" onChange={onChange} name="LastName"></Input>
+            </div>
+          </div>
+
+          <div className="row createUserRow">
+            <div className="col-4">
+              <label>Date of Birth</label>
+            </div>
+            <div className="col-8">
+              <DateTimePicker
+                onChange={setDateOfBirth}
+                value={dateOfBirth}
+                format="dd/MM/y"
+                clearIcon
+                maxDate={new Date()}
+                className="dateTimeCreateUser"
+              ></DateTimePicker>
+            </div>
+          </div>
+
+          <div className="row createUserRow">
+            <div className="col-4">
+              <label>Gender</label>
+            </div>
+            <div className="col-8">
+              <div className="row">
+                <div className="col-4 radioBtnCreateUser">
+                  <Input
+                    className="radioBtn"
+                    type="radio"
+                    value={true}
+                    onClick={() =>
+                      setCreateUser({ ...createUser, Gender: true })
+                    }
+                    checked={createUser.Gender === true}
+                  />{" "}
+                  Male
                 </div>
                 <div className="col-8">
                   <Input
-                    type="text"
-                    onChange={onChange}
-                    name="FirstName"
-                  ></Input>
+                    className="radioBtn"
+                    type="radio"
+                    value={false}
+                    onClick={() =>
+                      setCreateUser({ ...createUser, Gender: false })
+                    }
+                    checked={createUser.Gender === false}
+                  />{" "}
+                  Female
                 </div>
-              </div>
-
-              <div className="row createUserRow">
-                <div className="col-4">
-                  <label>Last Name</label>
-                </div>
-                <div className="col-8">
-                  <Input
-                    type="text"
-                    onChange={onChange}
-                    name="LastName"
-                  ></Input>
-                </div>
-              </div>
-
-              <div className="row createUserRow">
-                <div className="col-4">
-                  <label>Date of Birth</label>
-                </div>
-                <div className="col-8">
-                  <DateTimePicker
-                    onChange={setDateOfBirth}
-                    value={dateOfBirth}
-                    format="dd/MM/y"
-                    clearIcon
-                    maxDate={new Date()}
-                    className="dateTimeCreateUser"
-                  ></DateTimePicker>
-                </div>
-              </div>
-
-              <div className="row createUserRow">
-                <div className="col-4">
-                  <label>Gender</label>
-                </div>
-                <div className="col-8">
-                  <div className="row">
-                    <div className="col-4 radioBtnCreateUser">
-                      <Input
-                        type="radio"
-                        value={true}
-                        onClick={() =>
-                          setCreateUser({ ...createUser, Gender: true })
-                        }
-                        checked={createUser.Gender === true}
-                      />{" "}
-                      Male
-                    </div>
-                    <div className="col-8">
-                      <Input
-                        type="radio"
-                        value={false}
-                        onClick={() =>
-                          setCreateUser({ ...createUser, Gender: false })
-                        }
-                        checked={createUser.Gender === false}
-                      />{" "}
-                      Female
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="row createUserRow">
-                <div className="col-4">
-                  <label>Joined Date</label>
-                </div>
-                <div className="col-8">
-                  <DateTimePicker
-                    format="dd/MM/y"
-                    onChange={setJoinedDate}
-                    value={joinedDate}
-                    clearIcon
-                    minDate={dateOfBirth}
-                    className="dateTimeCreateUser"
-                  ></DateTimePicker>
-                  <label className="validateErr">{err.Check18YearsOld}</label>
-                </div>
-              </div>
-
-              <div className="row createUserRow">
-                <div className="col-4">
-                  <label>Type</label>
-                </div>
-                <div className="col-8">
-                  <Select
-                    options={optionsType}
-                    onChange={onSelectType}
-                  ></Select>
-                </div>
-              </div>
-            </div>
-
-            <div className="row">
-              <div className="col-6"></div>
-              <div className="col-3">
-                <Button onClick={onCreate} disabled={btnDisable} color="danger">
-                  Create
-                </Button>
-              </div>
-              <div className="col-3">
-                <Button onClick={() => history.push("/user")}>Cancel</Button>
               </div>
             </div>
           </div>
+
+          <div className="row createUserRow">
+            <div className="col-4">
+              <label>Joined Date</label>
+            </div>
+            <div className="col-8">
+              <DateTimePicker
+                format="dd/MM/y"
+                onChange={setJoinedDate}
+                value={joinedDate}
+                clearIcon
+                minDate={dateOfBirth}
+                className="dateTimeCreateUser"
+              ></DateTimePicker>
+              <label className="validateErr">{err.Check18YearsOld}</label>
+            </div>
+          </div>
+
+          <div className="row createUserRow">
+            <div className="col-4">
+              <label>Type</label>
+            </div>
+            <div className="col-8">
+              <Select options={optionsType} onChange={onSelectType}></Select>
+            </div>
+          </div>
         </div>
-        <div className="col-3"></div>
+
+        <div className="row">
+          <div className="col-6"></div>
+          <div className="col-3">
+            <Button onClick={onCreate} disabled={btnDisable} color="danger">
+              Create
+            </Button>
+          </div>
+          <div className="col-3">
+            <Button onClick={() => history.push("/user")}>Cancel</Button>
+          </div>
+        </div>
       </div>
     </div>
   );

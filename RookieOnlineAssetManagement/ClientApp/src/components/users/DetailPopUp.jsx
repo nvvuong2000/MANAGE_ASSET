@@ -1,9 +1,15 @@
 import React from "react";
-import { Button } from "reactstrap";
-import {faWindowClose} from "@fortawesome/free-solid-svg-icons";
+import { faWindowClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function DetailPopUp(props) {
+  const format=(value)=>{
+    let subString=value.substring(0,10)
+    let split=subString.split("-")
+    return split[1]+"/"+split[2]+"/"+split[0]
+  }
+  const date=format(props.user.dateOfBirth)
+  const join=format(props.user.joinedDate)
   return (
     <div className="popupDisable">
       <div className="row row1">
@@ -11,7 +17,12 @@ export default function DetailPopUp(props) {
           <label>Detailed User Information</label>
         </div>
         <div className="col-6">
-          <FontAwesomeIcon icon={faWindowClose} className="cursor" onClick={props.close} id="closeDetail"/>
+          <FontAwesomeIcon
+            icon={faWindowClose}
+            className="cursor"
+            onClick={props.close}
+            id="closeDetail"
+          />
         </div>
       </div>
       <div className="row detailUserPopUp">
@@ -29,7 +40,7 @@ export default function DetailPopUp(props) {
             <label>Full Name</label>
           </div>
           <div className="col-8">
-            <label>{props.user.lastName + " " + props.user.firstName}</label>
+            <label>{props.user.fullName}</label>
           </div>
         </div>
 
@@ -47,7 +58,7 @@ export default function DetailPopUp(props) {
             <label>Date of Birth</label>
           </div>
           <div className="col-8">
-            <label>{props.user.dateOfBirth}</label>
+            <label>{date}</label>
           </div>
         </div>
 
@@ -65,7 +76,7 @@ export default function DetailPopUp(props) {
             <label>Joined Date</label>
           </div>
           <div className="col-8">
-            <label>{props.user.joinedDate}</label>
+            <label>{join}</label>
           </div>
         </div>
 
@@ -74,7 +85,7 @@ export default function DetailPopUp(props) {
             <label>Type</label>
           </div>
           <div className="col-8">
-            <label>{props.user.type==true?"Admin":"Staff"}</label>
+            <label>{props.user.type == true ? "Admin" : "Staff"}</label>
           </div>
         </div>
 

@@ -298,6 +298,9 @@ namespace RookieOnlineAssetManagement.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("FullName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("Gender")
                         .HasColumnType("bit");
 
@@ -366,7 +369,7 @@ namespace RookieOnlineAssetManagement.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "cbabefeb-b876-4050-859f-c3a1bb99ebb7",
+                            ConcurrencyStamp = "cb95c250-9432-4d7f-ac68-d50a17dbb666",
                             DateOfBirth = new DateTime(1999, 2, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Disable = false,
                             Email = "dattt",
@@ -379,7 +382,7 @@ namespace RookieOnlineAssetManagement.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "DATT",
                             NormalizedUserName = "DATTT",
-                            PasswordHash = "AQAAAAEAACcQAAAAED7lCzyXIC0GKsFAl2Oq3stXegmwA2SZhMX5kjumZj+ptuD1lun6kTYFwzkVmDN+Tw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPqFS7DNdXawaCczfRcqmePKma9MA0zqOEstptIcLAoQUy/yEs/AXUdsKvYPCWR+nw==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             StaffCode = "SD0001",
@@ -391,7 +394,7 @@ namespace RookieOnlineAssetManagement.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f6b46e5a-dc2e-431e-a627-fcd0f15d0474",
+                            ConcurrencyStamp = "d1ef7a1c-8003-4f86-b97f-12994132c0b7",
                             DateOfBirth = new DateTime(1999, 2, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Disable = false,
                             Email = "vuongnv",
@@ -404,7 +407,7 @@ namespace RookieOnlineAssetManagement.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "VUONGNV",
                             NormalizedUserName = "VUONGNV",
-                            PasswordHash = "AQAAAAEAACcQAAAAEERY73yy0BFyFVRKVNpf3ppXEsGWR15WAHUo5xpkkN4BbeDAJmrfcZndxfYI4bBUag==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOpTrq8CFjgqbFUheS3TTiEKdjhodTKOmfMUri5dqlf0+hYKw3KNdut/dX+DX4Vq1A==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             StaffCode = "SD0002",

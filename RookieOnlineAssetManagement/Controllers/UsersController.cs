@@ -11,9 +11,6 @@ using System.Threading.Tasks;
 using RookieOnlineAssetManagement.Services.Interface;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
-using RookieOnlineAssetManagement.Models;
-using System;
-using EnumsNET;
 
 namespace RookieOnlineAssetManagement.Controllers
 {
@@ -32,16 +29,16 @@ namespace RookieOnlineAssetManagement.Controllers
             _logger = logger;
         }
 
-        [HttpPost]
-        [Route("getusers")]
-        public async Task<ActionResult<IEnumerable<UserModel>>> GetUsers([FromBody] UserModel user)
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<UserModel>>> GetUsers()
         {
-            var result = await _userService.GetUsers(user.Location);
+            var result = await _userService.GetUsers();
             return Ok(result);
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<UserModel>> GetUsersById(int id)
         {
+
             return await _userService.GetUsersById(id);
         }
 
@@ -55,6 +52,7 @@ namespace RookieOnlineAssetManagement.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateUser(int id, CreateUserModel createUserModel)
         {
+
             await _userService.UpdateUser(id, createUserModel);
             return Ok();
         }
@@ -63,6 +61,7 @@ namespace RookieOnlineAssetManagement.Controllers
         [Route("disable/{id}")]
         public async Task<ActionResult> DisableUser(int id)
         {
+
             await _userService.DisableUser(id);
             return Ok();
         }
@@ -78,7 +77,7 @@ namespace RookieOnlineAssetManagement.Controllers
         public async Task<ActionResult> GetInfoUserLogin()
         {
 
-          return Ok(await _userService.GetInfoUserLogin());
+            return Ok(await _userService.GetInfoUserLogin());
         }
 
 
