@@ -1,0 +1,4 @@
+export const ASSET_LIST = "ASSET_LIST"
+export const ADD_ASSET = "ADD_ASSET"
+export const ASSET_SELECTED = "ASSET_SELECTED"
+export const ASSET_HISTORY = "ASSET_HISTORY"
