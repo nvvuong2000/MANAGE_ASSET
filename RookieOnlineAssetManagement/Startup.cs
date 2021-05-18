@@ -66,8 +66,14 @@ namespace RookieOnlineAssetManagement
             services.AddSwaggerGen();
             services.AddControllersWithViews();
             services.AddRazorPages();
-
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAnyOrigin", builder => builder
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader());
+            });
+            //services.AddCors();
 
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ICaTegoryRepository, CategoryRepository>();
@@ -82,10 +88,10 @@ namespace RookieOnlineAssetManagement
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-            {
-                serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>().Database.Migrate();
-            }
+            //using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            //{
+            //    serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>().Database.Migrate();
+            //}
 
             if (env.IsDevelopment())
             {
@@ -100,7 +106,7 @@ namespace RookieOnlineAssetManagement
             }
 
             // app.UseCors(options => options.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
-
+            app.UseCors("AllowAnyOrigin");
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();

@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using RookieOnlineAssetManagement.Entities;
 using RookieOnlineAssetManagement.Models;
 using RookieOnlineAssetManagement.Models.Asset;
+using RookieOnlineAssetManagement.Models.Paged;
 using RookieOnlineAssetManagement.Services.Interface;
 using RookieShop.Backend.Services.Interface;
 using System;
@@ -58,10 +60,11 @@ namespace RookieOnlineAssetManagement.Controllers
 
         // POST: AssetController/Create
         [HttpPost]
-        public async Task<ActionResult> Create(Asset newAsset)
+        public async Task<ActionResult> Create(AssetCreateRequest newAsset)
         {
             try
             {
+
                 var result = await _repo.AddAsset(newAsset);
                 return Ok(result);
             }
@@ -75,7 +78,7 @@ namespace RookieOnlineAssetManagement.Controllers
 
 
         // DELETE: AssetController/DeleteAsset
-        [HttpDelete]
+        [HttpGet("id")]
         public async Task<ActionResult> DeleteAsset(string id)
         {
             var result = await _repo.DeleteAsset(id);
@@ -96,20 +99,30 @@ namespace RookieOnlineAssetManagement.Controllers
                 return NotFound();
             return Ok(result);
         }
-        [HttpPost("mutil-search")]
-        public async Task<ActionResult> MutilSearchAsset(MultipleFilter mul)
+        //[HttpPost("mutil-search")]
+        //public async Task<ActionResult> MutilSearchAsset(MultipleFilter mul)
+        //{
+        //    //State and category checked All
+        //    if (mul.states[0].Equals(-1) && mul.categories[0].Equals(-1))
+        //    {
+        //        var result = await _repo.GetAssetList();
+
+        //        return Ok(result);
+        //    }
+        //    var resultSearch = await _repo.MutilSearchAsset(mul);
+        //    return Ok(resultSearch);
+        //}
+        [HttpPost("mutil-search1")]
+        public async Task<ActionResult> MutilSearchAsset1([FromQuery] PagedRepository pagedReposiory, MultipleFilter mul)
         {
             //State and category checked All
-            if (mul.states[0].Equals(-1) && mul.categories[0].Equals(-1))
-            {
-                var result = await _repo.GetAssetList();
-
-                return Ok(result);
-            }
-            var resultSearch = await _repo.MutilSearchAsset(mul);
+           
+            var resultSearch = await _repo.MutilSearchAsset1(pagedReposiory, mul);
+            Pagination(resultSearch);
             return Ok(resultSearch);
-        }
-        [HttpGet("getState")]
+
+            }
+         [HttpGet("getState")]
         public ActionResult<StateList> StateList()
         {
             var list = _repo.StateAssetList();
@@ -117,6 +130,20 @@ namespace RookieOnlineAssetManagement.Controllers
             return Ok(list);
 
 
+        }
+        [HttpGet("page")]
+        public void Pagination(PagedList<AssetsListViewModel> result)
+        {
+            var metadata = new
+            {
+                result.TotalCount,
+                result.PageSize,
+                result.CurrentPage,
+                result.TotalPages,
+                result.HasNext,
+                result.HasPrevious,
+            };
+            Response.Headers.Add("Pagination", JsonConvert.SerializeObject(metadata));
         }
     }
 }

@@ -1,4 +1,8 @@
 export const ASSET_LIST = "ASSET_LIST"
 export const ADD_ASSET = "ADD_ASSET"
+export const UPDATE_ASSET = "UPDATE_ASSET"
 export const ASSET_SELECTED = "ASSET_SELECTED"
 export const ASSET_HISTORY = "ASSET_HISTORY"
+export const ASSET_STATE_LIST = "ASSET_STATE_LIST"
+export const ASSET_DISABLE = "ASSET_DISABLE"
+export const FILTER = "FILTER"

@@ -5,6 +5,7 @@ using RookieOnlineAssetManagement.Data;
 using RookieOnlineAssetManagement.Entities;
 using RookieOnlineAssetManagement.Models;
 using RookieOnlineAssetManagement.Models.Asset;
+using RookieOnlineAssetManagement.Models.Paged;
 using RookieOnlineAssetManagement.Services.Interface;
 using RookieShop.Backend.Services.Interface;
 using System;
@@ -25,7 +26,7 @@ namespace RookieShop.Backend.Services.Implement
             _repoUser = repoUser;
         }
 
-        public async Task<Asset> AddAsset(Asset newAsset)
+        public async Task<Asset> AddAsset(AssetCreateRequest newAsset)
         {
             // Add New Asset
             var preFix = await _dbContext.Categories.Where(x => x.Id == newAsset.CategoryId).Select(x => x.Prefix).FirstOrDefaultAsync();
@@ -38,7 +39,7 @@ namespace RookieShop.Backend.Services.Implement
 
             char x = '0';
 
-            newAsset = new Asset()
+           var  newAsset1 = new Asset()
             {
 
                 Id = preFix + number.ToString().PadLeft(6, x),
@@ -46,12 +47,12 @@ namespace RookieShop.Backend.Services.Implement
                 CategoryId = newAsset.CategoryId,
                 InstalledDate = Convert.ToDateTime(DateTime.Now.ToString("dddd, dd MMMM yyyy HH:mm:ss")),
                 Specification = newAsset.Specification,
-                StateAsset = newAsset.StateAsset,
+                StateAsset = (StateAsset)newAsset.StateAsset,
                 Location = location,
             };
-            _dbContext.Assets.Add(newAsset);
+            _dbContext.Assets.Add(newAsset1);
             _dbContext.SaveChanges();
-            return newAsset;
+            return newAsset1;
         }
 
         public async Task<AssetDetailsNotIncludeHistory> AssetDetails(string id)
@@ -179,30 +180,106 @@ namespace RookieShop.Backend.Services.Implement
             return list;
         }
 
-        public async Task<List<AssetsListViewModel>> MutilSearchAsset(MultipleFilter mul)
+        //public async Task<List<AssetsListViewModel>> MutilSearchAsset(MultipleFilter mul)
+        //{
+
+        //    var userId = _repoUser.GetIdUserLogin();
+        //    var location = _dbContext.Users.Where(x => x.Id.Equals(int.Parse(userId))).Select(x => x.Location).FirstOrDefault();
+        //    var AssetList = await _dbContext.Assets.Include(x => x.Category).ToListAsync();
+
+        //    if (mul.states[0].Equals(-1))
+        //    {
+        //        AssetList = AssetList.Where(x => x.Location.Equals(location)
+        //        && mul.categories.Contains(x.CategoryId)).ToList();
+        //    }
+
+        //    else if (mul.categories[0].Equals(-1))
+        //    {
+        //        AssetList = AssetList.Where(x => x.Location.Equals(location)
+        //        && mul.states.Contains((int)x.StateAsset)).ToList();
+        //    }
+        //    else
+        //    {
+        //        AssetList = AssetList.Where(x => x.Location.Equals(location)
+        //        && mul.states.Contains((int)x.StateAsset) && mul.categories.Contains(x.CategoryId)).ToList();
+        //    }
+        //    var result = AssetList.Select(x => new AssetsListViewModel
+        //    {
+        //        AssetCode = x.Id,
+        //        AssetName = x.AssetName,
+        //        CategoryName = x.Category.CategoryName,
+        //        StateName = ((StateAsset)x.StateAsset).AsString(EnumFormat.Description),
+        //        StateId = ((StateAsset)x.StateAsset),
+        //        Location = x.Location,
+        //    }).ToList();
+
+        //    return result;
+        //}
+        public async Task<PagedList<AssetsListViewModel>> MutilSearchAsset1(PagedRepository pagedRepository, MultipleFilter mul)
         {
 
             var userId = _repoUser.GetIdUserLogin();
             var location = _dbContext.Users.Where(x => x.Id.Equals(int.Parse(userId))).Select(x => x.Location).FirstOrDefault();
-            var AssetList = await _dbContext.Assets.Include(x => x.Category).ToListAsync();
+          
 
-            if (mul.states[0].Equals(-1))
+            IQueryable<Asset> getAssetList = _dbContext.Assets.Where(x => x.Location.Equals(location)).AsQueryable();
+          
+
+           
+            if (mul.categories[0].Equals(-1) && mul.states[0].Equals(-1))
             {
-                AssetList = AssetList.Where(x => x.Location.Equals(location)
-                && mul.categories.Contains(x.CategoryId)).ToList();
+
+                getAssetList = getAssetList;
             }
 
             else if (mul.categories[0].Equals(-1))
             {
-                AssetList = AssetList.Where(x => x.Location.Equals(location)
-                && mul.states.Contains((int)x.StateAsset)).ToList();
+
+
+                getAssetList= getAssetList.Where(x => mul.states.Contains((int)x.StateAsset));
+            }
+            else if (mul.states[0].Equals(-1)) 
+            {
+
+
+                getAssetList = getAssetList.Where(x=>mul.categories.Contains(x.CategoryId)); ;
             }
             else
             {
-                AssetList = AssetList.Where(x => x.Location.Equals(location)
-                && mul.states.Contains((int)x.StateAsset) && mul.categories.Contains(x.CategoryId)).ToList();
+
+                getAssetList=getAssetList.Where(x =>mul.categories.Contains(x.CategoryId));
+
+                getAssetList=getAssetList.Where(x => mul.states.Contains((int)x.StateAsset));
+
             }
-            var result = AssetList.Select(x => new AssetsListViewModel
+            
+
+            if (!String.IsNullOrEmpty(mul.keyword))
+            {
+                getAssetList = getAssetList.Where(x => x.Id.Contains(mul.keyword)
+                    || x.AssetName.Contains(mul.keyword));
+            }
+
+          
+            if (!String.IsNullOrEmpty(mul.Column))
+            {
+                switch (mul.Column)
+                {
+                    case "ID":
+                        getAssetList = mul.sortASC ? getAssetList.OrderBy(x => x.Id) : getAssetList.OrderByDescending(x => x.Id);
+                        break;
+                    case "Name":
+                        getAssetList = mul.sortASC ? getAssetList.OrderBy(x => x.AssetName) : getAssetList.OrderByDescending(x => x.AssetName);
+                        break;
+                    case "Category":
+                        getAssetList = mul.sortASC ? getAssetList.OrderBy(x => x.CategoryId) : getAssetList.OrderByDescending(x => x.CategoryId);
+                        break;
+                    case "State":
+                        getAssetList = mul.sortASC ? getAssetList.OrderBy(x => x.StateAsset) : getAssetList.OrderByDescending(x => x.StateAsset);
+                        break;
+                }
+            }
+            var result = getAssetList.Select(x => new AssetsListViewModel
             {
                 AssetCode = x.Id,
                 AssetName = x.AssetName,
@@ -210,9 +287,11 @@ namespace RookieShop.Backend.Services.Implement
                 StateName = ((StateAsset)x.StateAsset).AsString(EnumFormat.Description),
                 StateId = ((StateAsset)x.StateAsset),
                 Location = x.Location,
-            }).ToList();
-
-            return result;
+            });
+            return PagedList<AssetsListViewModel>.ToPagedList(result,
+               pagedRepository.PageNumber,
+               pagedRepository.PageSize);
+            //return result;
         }
     }
 }

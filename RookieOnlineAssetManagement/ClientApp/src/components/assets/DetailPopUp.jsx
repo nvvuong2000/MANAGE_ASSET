@@ -4,6 +4,7 @@ import { faWindowClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as assetManage from "../../actions/asset";
 import { useDispatch, useSelector } from "react-redux";
+import "../../css/asset_css/index.css";
 
 export default function DetailPopUp(props) {
 
@@ -39,7 +40,7 @@ export default function DetailPopUp(props) {
           <FontAwesomeIcon icon={faWindowClose} className="cursor" onClick={props.close} id="closeDetail" />
         </div>
       </div>
-      <div className="row detailUserPopUp">
+      <div className="row detailAssetPopUp">
         <div className="row" >
           <div className="col-4">
             <label>Asset Code</label>
@@ -100,12 +101,16 @@ export default function DetailPopUp(props) {
           </div>
         </div>
         <div className="row">
-          <div className="col-4">
+          <div className="col-12">
             <label>History</label>
           </div>
-          <div className='col-8'>
+          </div>
+          <div className="row">
+          <div className='col-12'>
+            <div id="table-wrapper">
+              <div id="table-scroll">
             <Table responsive>
-              <thead>
+              <thead style={{fontSize:"13px"}}>
                 <tr>
                   <th>Date</th>
                   <th>Assigned to</th>
@@ -124,7 +129,10 @@ export default function DetailPopUp(props) {
                 ))}
               </tbody>
             </Table>
+            </div>
+            </div>
           </div>
+          
         </div>
 
       </div>

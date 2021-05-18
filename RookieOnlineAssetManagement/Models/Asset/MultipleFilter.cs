@@ -9,5 +9,8 @@ namespace RookieOnlineAssetManagement.Models.Asset
     {
         public List<int> categories { get; set; }
         public List<int> states { get; set; }
+        public string keyword { get; set; }
+        public string Column { get; set; }
+        public bool sortASC { get; set; }
     }
 }
